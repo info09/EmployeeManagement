@@ -1,6 +1,6 @@
 ﻿namespace EmployeeManagementSystem.BaseLibrary.Dtos
 {
-    public class Login : AccountBase
+    public class LoginRequest : AccountBase
     {
     }
 }

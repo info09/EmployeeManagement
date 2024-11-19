@@ -2,7 +2,7 @@
 
 namespace EmployeeManagementSystem.BaseLibrary.Dtos
 {
-    public class Register : AccountBase
+    public class RegisterRequest : AccountBase
     {
         [Required]
         [MinLength(5)]

@@ -25,19 +25,19 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             _options = options;
         }
 
-        public async Task<GeneralResponse> CreateAsync(Register register)
+        public async Task<GeneralResponse> CreateAsync(RegisterRequest request)
         {
-            if (register is null) return new GeneralResponse(false, "Registration failed");
+            if (request is null) return new GeneralResponse(false, "Registration failed");
 
-            var checkUser = await FindUserByEmaiAsync(register.Email!);
+            var checkUser = await FindUserByEmaiAsync(request.Email!);
             if (checkUser != null) return new GeneralResponse(false, "User already exist");
 
             // Save User
             var appUser = await AddToDb(new ApplicationUser()
             {
-                FullName = register.FullName,
-                Email = register.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(register.Password!),
+                FullName = request.FullName,
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password!),
             });
             var checkAdminRole = await _context.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.Admin));
             var adminRole = new SystemRole();
@@ -63,16 +63,16 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             return new GeneralResponse(true, "Create user successfully");
         }
 
-        public async Task<LoginResponse> SignInAsync(Login login)
+        public async Task<LoginResponse> SignInAsync(LoginRequest request)
         {
-            if (login == null)
+            if (request == null)
                 return new LoginResponse(false, "Model is null");
 
-            var appUser = await FindUserByEmaiAsync(login.Email!);
+            var appUser = await FindUserByEmaiAsync(request.Email!);
             if (appUser == null)
                 return new LoginResponse(false, "User not found");
 
-            if (!BCrypt.Net.BCrypt.Verify(login.Password!, appUser.Password!))
+            if (!BCrypt.Net.BCrypt.Verify(request.Password!, appUser.Password!))
                 return new LoginResponse(false, "Password is incorrect");
 
             var getUserRole = await FindUserRoleAsync(appUser.Id);
@@ -85,6 +85,18 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
 
             string jwtToken = GenerateToken(appUser, getRole!.Name!);
             string refreshToken = GenerateRefreshToken();
+
+            var findUser = await _context.RefreshTokenInfos.FirstOrDefaultAsync(i => i.UserId == appUser.Id);
+            if (findUser != null)
+            {
+                findUser!.Token = refreshToken;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                await AddToDb(new RefreshTokenInfo() { Token = refreshToken, UserId = appUser.Id });
+            }
+
             return new LoginResponse(true, "Login success", jwtToken, refreshToken);
         }
 
@@ -125,12 +137,12 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             }
         }
 
-        public async Task<LoginResponse> RefreshTokenAsync(RefreshToken token)
+        public async Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequest request)
         {
-            if (token == null)
+            if (request == null)
                 return new LoginResponse(false, "Model is null");
 
-            var checkToken = await _context.RefreshTokenInfos.FirstOrDefaultAsync(i => i.Token!.Equals(token.Token!));
+            var checkToken = await _context.RefreshTokenInfos.FirstOrDefaultAsync(i => i.Token!.Equals(request.RefreshToken!));
             if (checkToken == null)
                 return new LoginResponse(false, "Refresh token not found");
 

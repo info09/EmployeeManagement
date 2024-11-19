@@ -5,8 +5,8 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Contracts
 {
     public interface IUserAccountRepository
     {
-        Task<GeneralResponse> CreateAsync(Register register);
-        Task<LoginResponse> SignInAsync(Login login);
-        Task<LoginResponse> RefreshTokenAsync(RefreshToken refreshToken);
+        Task<GeneralResponse> CreateAsync(RegisterRequest request);
+        Task<LoginResponse> SignInAsync(LoginRequest request);
+        Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequest request);
     }
 }

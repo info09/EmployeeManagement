@@ -16,7 +16,7 @@ namespace EmployeeManagementSystem.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register register)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest register)
         {
             if (register == null) return BadRequest("Model is empty");
             var result = await _userAccountRepository.CreateAsync(register);
@@ -24,10 +24,18 @@ namespace EmployeeManagementSystem.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login login)
+        public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
             if (login == null) return BadRequest("Model is empty");
             var result = await _userAccountRepository.SignInAsync(login);
+            return Ok(result);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> Refresh([FromBody]RefreshTokenRequest refreshToken)
+        {
+            if(refreshToken == null) return BadRequest("Model is empty");
+            var result =  await _userAccountRepository.RefreshTokenAsync(refreshToken);
             return Ok(result);
         }
     }
