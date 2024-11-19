@@ -75,11 +75,11 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             if (!BCrypt.Net.BCrypt.Verify(login.Password!, appUser.Password!))
                 return new LoginResponse(false, "Password is incorrect");
 
-            var getUserRole = await _context.UserRoles.FirstOrDefaultAsync(i => i.UserId == appUser.Id);
+            var getUserRole = await FindUserRoleAsync(appUser.Id);
             if (getUserRole == null)
                 return new LoginResponse(false, "User role not found");
 
-            var getRole = await _context.SystemRoles.FirstOrDefaultAsync(i => i.Id == getUserRole.RoleId);
+            var getRole = await FindRoleAsync(getUserRole.RoleId);
             if (getRole == null)
                 return new LoginResponse(false, "Role not found");
 
@@ -89,6 +89,8 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
         }
 
         private async Task<ApplicationUser> FindUserByEmaiAsync(string email) => await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email!.ToLower().Equals(email!.ToLower()));
+        private async Task<UserRole> FindUserRoleAsync(int userId) => await _context.UserRoles.FirstOrDefaultAsync(x => x.UserId == userId);
+        private async Task<SystemRole> FindRoleAsync(int roleId) => await _context.SystemRoles.FirstOrDefaultAsync(x => x.Id == roleId);
 
         private async Task<T> AddToDb<T>(T model)
         {
@@ -121,6 +123,33 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
+        }
+
+        public async Task<LoginResponse> RefreshTokenAsync(RefreshToken token)
+        {
+            if (token == null)
+                return new LoginResponse(false, "Model is null");
+
+            var checkToken = await _context.RefreshTokenInfos.FirstOrDefaultAsync(i => i.Token!.Equals(token.Token!));
+            if (checkToken == null)
+                return new LoginResponse(false, "Refresh token not found");
+
+            //Get UserDetails
+            var appUser = await _context.ApplicationUsers.FirstOrDefaultAsync(i => i.Id == checkToken.UserId);
+
+            var userRole = await FindUserRoleAsync(appUser!.Id);
+            var getRole = await FindRoleAsync(userRole!.RoleId);
+            string jwtToken = GenerateToken(appUser!, getRole!.Name!);
+            string refreshToken = GenerateRefreshToken();
+
+            var updateRefreshToken = await _context.RefreshTokenInfos.FirstOrDefaultAsync(i => i.UserId == appUser.Id);
+            if (updateRefreshToken == null)
+                return new LoginResponse(false, "Refresh token not found");
+
+            updateRefreshToken.Token = refreshToken;
+            await _context.SaveChangesAsync();
+
+            return new LoginResponse(true, "Refresh token success", jwtToken, refreshToken);
         }
     }
 }
