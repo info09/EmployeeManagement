@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using EmployeeManagementSystem.Client;
+using EmployeeManagementSystem.Client.ApplicationStates;
 using EmployeeManagementSystem.ClientLibrary.Helpers;
 using EmployeeManagementSystem.ClientLibrary.Services.Contracts;
 using EmployeeManagementSystem.ClientLibrary.Services.Implementations;
@@ -27,6 +28,7 @@ builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
+builder.Services.AddScoped<DepartmentState>();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<SfDialogService>();
 

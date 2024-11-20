@@ -1,5 +1,7 @@
 ﻿@page "/nav"
+@using EmployeeManagementSystem.Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
+@inject DepartmentState departmentState
 
 <AuthorizeView>
     <Authorized>
@@ -8,9 +10,6 @@
                 <a class="navbar-brand" href="">
                     Welcome, @context.User.Identity!.Name
                 </a>
-                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
             </div>
         </div>
 
@@ -33,7 +32,7 @@
                             <span>Administration</span>
                         </div>
                     </NavLink>
-                    <a class="nav-link p-2 text-white" style="margin-left:5rem; visibility:@CssStyle">
+                    <a class="nav-link p-2 text-white" style="margin-left:5rem;cursor: pointer; visibility:@CssStyle">
                         <div class="hstack">
                             <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
                             <span>Users</span>
@@ -43,13 +42,13 @@
                 <div class="nav-item px-3" style="margin-top: @DepartmentMargin">
                     <NavLink class="nav-link p-2" style="cursor: pointer;" href="javascript:void()" @onclick="ShowDepartmentContainer">
                         <div class="hstack gap-1">
-                            <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
+                            <span class="bi bi-backpack4-fill fs-3 text-center" aria-hidden="true" style="margin-top:-2rem;"></span>
                             <span>Departments</span>
                         </div>
                     </NavLink>
                     <div class="nav-link p-2 text-white" style="margin-left:5rem; visibility:@DepartmentCssStyle">
                         <ul class="list-group">
-                            <li style="list-style: none;" class="cursorStyle">
+                            <li style="list-style: none; cursor: pointer;">
                                 <a class="nav-link p-2" @onclick="GeneralDepartmentClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-file-medical fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
@@ -57,7 +56,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li style="list-style: none;" class="cursorStyle">
+                            <li style="list-style: none;cursor: pointer;">
                                 <a class="nav-link p-2">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-subtract fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
@@ -65,10 +64,10 @@
                                     </div>
                                 </a>
                             </li>
-                            <li style="list-style: none;" class="cursorStyle">
+                            <li style="list-style: none; cursor: pointer;">
                                 <a class="nav-link p-2">
                                     <div class="hstack text-wrap">
-                                        <span class="bi bi-file-medical fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
+                                        <span class="bi bi-chevron-bar-contract fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
                                         <span>Branch</span>
                                     </div>
                                 </a>
@@ -121,5 +120,8 @@
             DepartmentCssStyle = "hidden";
     }
 
-    private void GeneralDepartmentClicked() { }
+    private void GeneralDepartmentClicked()
+    {
+        departmentState.GeneralDepartmentClicked();    
+    }
 }
