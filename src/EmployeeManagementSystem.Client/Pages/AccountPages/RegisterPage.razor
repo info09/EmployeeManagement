@@ -1,0 +1,51 @@
+﻿@page "/identity/account/register"
+@using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.ClientLibrary.Services.Contracts
+@inject IUserAccountService UserAccountService
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <EditForm Enhance Model="User" OnValidSubmit="HandleRegister">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="card">
+                    <div class="card-header">Fill this form to register</div>
+                    <div class="card-body">
+                        <div class="form-group mt-3">
+                            <label class="form-label">FullName</label>
+                            <InputText @bind-Value="User.FullName" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="form-label">Email</label>
+                            <InputText @bind-Value="User.Email" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" @bind="User.Password" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" @bind="User.ConfirmPassword" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <button class="btn btn-outline-primary float-end" type="submit">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    public RegisterRequest User { get; set; } = new RegisterRequest();
+    private async Task HandleRegister()
+    {
+
+        var result = await UserAccountService.CreateAsync(User);
+        if (result.flag)
+        {
+            NavManager.NavigateTo("/identity/account/login", forceLoad: true);
+        }
+    }
+}

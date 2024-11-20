@@ -1,4 +1,4 @@
-﻿namespace EmployeeManagementSystem.BaseLibrary.Dtos
+﻿namespace EmployeeManagementSystem.BaseLibrary.Dtos.Client
 {
     public class UserSession
     {

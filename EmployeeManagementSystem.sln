@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.Server", "src\EmployeeManagementSystem.Server\EmployeeManagementSystem.Server.csproj", "{95B11C5D-6AE4-4640-8521-3810D01B10D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementSystem.Server", "src\EmployeeManagementSystem.Server\EmployeeManagementSystem.Server.csproj", "{95B11C5D-6AE4-4640-8521-3810D01B10D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.Client", "src\EmployeeManagementSystem.Client\EmployeeManagementSystem.Client.csproj", "{41C930C9-F0E6-4241-BB9E-D304208538BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementSystem.Client", "src\EmployeeManagementSystem.Client\EmployeeManagementSystem.Client.csproj", "{41C930C9-F0E6-4241-BB9E-D304208538BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.BaseLibrary", "src\EmployeeManagementSystem.BaseLibrary\EmployeeManagementSystem.BaseLibrary.csproj", "{7F9EBFA8-4A8A-43EB-BBE8-3A2CB1B2CFAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementSystem.BaseLibrary", "src\EmployeeManagementSystem.BaseLibrary\EmployeeManagementSystem.BaseLibrary.csproj", "{7F9EBFA8-4A8A-43EB-BBE8-3A2CB1B2CFAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.ServerLibrary", "src\EmployeeManagementSystem.ServerLibrary\EmployeeManagementSystem.ServerLibrary.csproj", "{1FB0B3DF-36B1-457C-87AC-A00A469E1335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementSystem.ServerLibrary", "src\EmployeeManagementSystem.ServerLibrary\EmployeeManagementSystem.ServerLibrary.csproj", "{1FB0B3DF-36B1-457C-87AC-A00A469E1335}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementSystem.ClientLibrary", "src\EmployeeManagementSystem.ClientLibrary\EmployeeManagementSystem.ClientLibrary.csproj", "{A5910547-7F74-4F6C-87EA-C82D009ECE05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementSystem.ClientLibrary", "src\EmployeeManagementSystem.ClientLibrary\EmployeeManagementSystem.ClientLibrary.csproj", "{A5910547-7F74-4F6C-87EA-C82D009ECE05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
