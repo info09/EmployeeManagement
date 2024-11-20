@@ -1,15 +1,29 @@
 ﻿@page "/identity/account/register"
+@layout AuthenticationLayout
 @using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.Client.Pages.OtherPage
 @using EmployeeManagementSystem.ClientLibrary.Services.Contracts
+@using Microsoft.AspNetCore.Components.Authorization
+@using Syncfusion.Blazor.Popups
 @inject IUserAccountService UserAccountService
+@inject SfDialogService DialogService
 <div class="container">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
             <EditForm Enhance Model="User" OnValidSubmit="HandleRegister">
                 <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div class="card">
-                    <div class="card-header">Fill this form to register</div>
+                <div class="card bg-black d-flex justify-content-center" style="opacity: 0.5; margin-top: 50%; border-radius: 10px; color: white; font-weight: bold;">
+                    <div class="card-header text-center fs-5">Register an account</div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 d-flex justify-content-center">
+                                <img src="/images/companylogos/logo.png" style="border-radius: 20px;" height="50" width="50" />
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="form-group mt-3">
                             <label class="form-label">FullName</label>
@@ -28,24 +42,68 @@
                             <input type="password" class="form-control" @bind="User.ConfirmPassword" />
                         </div>
                         <div class="form-group mt-3">
-                            <button class="btn btn-outline-primary float-end" type="submit">Register</button>
+                            @if (ShowLoadingButton)
+                            {
+                                <ButtonLoadingSpinner />
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-primary float-end" type="submit">Register</button>
+                            }
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="text-center">
+                            Have account already? | <a href="/identity/account/login">SignIn</a>
+                        </span>
+                        <ValidationSummary />
                     </div>
                 </div>
             </EditForm>
         </div>
+        <div class="col-lg-4"></div>
     </div>
 </div>
 
 @code {
+    public bool ShowLoadingButton { get; set; } = false;
     public RegisterRequest User { get; set; } = new RegisterRequest();
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckUserAuthentication();
+    }
+
     private async Task HandleRegister()
     {
-
+        ShowLoadingButton = true;
         var result = await UserAccountService.CreateAsync(User);
         if (result.flag)
         {
+            await DisplayDialog(result.message, "Success");
             NavManager.NavigateTo("/identity/account/login", forceLoad: true);
+        }
+        else
+        {
+            await DisplayDialog(result.message, "Alert");
+        }
+        ShowLoadingButton = false;
+    }
+    private async Task DisplayDialog(string content, string title)
+    {
+        await DialogService.AlertAsync(content, title);
+    }
+
+    private async Task CheckUserAuthentication()
+    {
+        var user = (await AuthenticationState).User;
+        bool isAuthenticated = user.Identity!.IsAuthenticated;
+        if (isAuthenticated)
+        {
+            NavManager.NavigateTo("/home/dashboard");
         }
     }
 }

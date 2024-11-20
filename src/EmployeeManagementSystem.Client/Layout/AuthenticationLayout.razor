@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            @Body
+        </div>
+    </div>
+</div>
+
+<div class="overlay"></div>
+<Syncfusion.Blazor.Popups.SfDialogProvider />
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: url('images/background/bg.jpg') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        position: relative;
+    }
+
+    /* Lớp phủ mờ nền */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3); /* Lớp phủ trong suốt */
+        backdrop-filter: blur(10px); /* Làm mờ nền phía sau */
+        z-index: -1; /* Đưa lớp phủ xuống dưới nội dung */
+    }
+</style>
