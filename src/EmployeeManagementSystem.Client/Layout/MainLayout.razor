@@ -1,8 +1,11 @@
 ﻿@using EmployeeManagementSystem.BaseLibrary.Dtos.Client
 @using EmployeeManagementSystem.ClientLibrary.Helpers
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthStateProvider
 @inherits LayoutComponentBase
+@attribute [Authorize]
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -10,11 +13,7 @@
 
     <main>
         <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <a class="btn btn-none text-danger" @onclick="LogoutClicked">Logout</a>
-                </Authorized>
-            </AuthorizeView>
+            <EmployeeManagementSystem.Client.Pages.ContentPages.ProfileDropdown />
         </div>
 
         <article class="content px-4">
@@ -24,17 +23,6 @@
 </div>
 <Syncfusion.Blazor.Popups.SfDialogProvider />
 @code {
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-    //     var user = authState.User;
-
-    //     if (!user.Identity!.IsAuthenticated)
-    //     {
-    //         NavManager.NavigateTo($"/identity/account/login");
-    //     }
-    // }
-
     private async Task LogoutClicked()
     {
         var logoutModel = new UserSession();
