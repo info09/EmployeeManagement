@@ -1,5 +1,8 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using EmployeeManagementSystem.BaseLibrary.Entities
+@using EmployeeManagementSystem.Client.ApplicationStates
+@using EmployeeManagementSystem.ClientLibrary.Services.Contracts
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -10,3 +13,17 @@
 @using EmployeeManagementSystem.Client.Layout
 
 @inject NavigationManager NavManager
+@inject AllState allState
+
+@* // GeneralDepartment / Department / Branch*@
+@inject IGenericService<GeneralDepartment> GeneralDepartmentService
+@inject IGenericService<Department> DepartmentService
+@inject IGenericService<Branch> BranchService
+
+@* // Country / City / Town*@
+@inject IGenericService<Country> CountryService
+@inject IGenericService<City> CityService
+@inject IGenericService<Town> TownService
+
+@* // Employee *@
+@inject IGenericService<Employee> EmployeeService

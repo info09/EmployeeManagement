@@ -47,6 +47,10 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             if (generalDepartment == null)
                 return NotFound();
 
+            var check = await CheckName(entity.Name!);
+            if (check)
+                return new GeneralResponse(false, "Name already exist");
+
             generalDepartment.Name = entity.Name;
             _context.SaveChanges();
             return Success();

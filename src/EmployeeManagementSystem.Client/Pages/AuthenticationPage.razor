@@ -8,12 +8,8 @@
     {
         var user = (await AuthenticationState).User;
         if(user.Identity!.IsAuthenticated)
-        {
             NavManager.NavigateTo("/home/dashboard");
-        }
         else
-        {
             NavManager.NavigateTo("/identity/account/login");
-        }
     }
 }
