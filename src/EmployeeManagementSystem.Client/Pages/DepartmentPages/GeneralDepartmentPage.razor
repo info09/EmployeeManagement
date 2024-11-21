@@ -1,4 +1,5 @@
 ﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.BaseLibrary.Entities
 @using EmployeeManagementSystem.Client.ApplicationStates
 @inject DepartmentState departmentState
 @implements IDisposable
@@ -60,7 +61,7 @@
 <GeneralDepartmentDialog @ref="generalDepartmentDialog" />
 @code{
     GeneralDepartmentDialog? generalDepartmentDialog;
-    GeneralDepartmentDto DepartmentDto = new();
+    GeneralDepartment DepartmentDto = new();
     private void OpenDialog()
     {
         generalDepartmentDialog?.OpenDialog();

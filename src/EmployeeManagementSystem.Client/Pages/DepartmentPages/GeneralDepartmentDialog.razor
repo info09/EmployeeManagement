@@ -1,4 +1,5 @@
 ﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.BaseLibrary.Entities
 @using Syncfusion.Blazor.Popups
 @inject SfDialogService dialogService
 
@@ -28,7 +29,7 @@
 
 @code {
     [Parameter]
-    public GeneralDepartmentDto Department { get; set; } = new GeneralDepartmentDto();
+    public GeneralDepartment Department { get; set; } = new GeneralDepartment();
     public bool IsVisible { get; set; } = false;
 
     public void OpenDialog()

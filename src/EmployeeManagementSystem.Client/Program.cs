@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Syncfusion.Blazor;
 using Syncfusion.Blazor.Popups;
+using Syncfusion.Licensing;
 
+SyncfusionLicenseProvider.RegisterLicense("MzU4NzQ2MUAzMjM3MmUzMDJlMzBGWVh1UkU0cjF1MjZzMmZHQnZoOVVQdlpYa09zWCtqbkpaMExuRFI3UFJFPQ==");
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
