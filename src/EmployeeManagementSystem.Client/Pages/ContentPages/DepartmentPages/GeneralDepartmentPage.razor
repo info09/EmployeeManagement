@@ -28,7 +28,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(GeneralDepartments != null)
+                                @if (GeneralDepartments != null)
                                 {
                                     int count = 1;
                                     foreach (var item in GeneralDepartments)
@@ -53,8 +53,8 @@
                                         </td>
                                     </tr>
                                 }
-                                
-                                
+
+
                             </tbody>
                         </table>
                     </div>
@@ -64,10 +64,12 @@
     </div>
 
 }
-<GeneralDepartmentDialog @ref="generalDepartmentDialog" HandleSaveOperationEvent="HandleSaveOperationEvent" GeneralDepartment="GeneralDepartment" />
+<GeneralDepartmentDialog @ref="generalDepartmentDialog" 
+                            HandleSaveOperationEvent="HandleSaveOperationEvent" 
+                            GeneralDepartment="GeneralDepartmentParameter" />
 @code {
     GeneralDepartmentDialog? generalDepartmentDialog;
-    GeneralDepartment GeneralDepartment = new();
+    GeneralDepartment GeneralDepartmentParameter = new();
     public string Title { get; set; } = "Add";
     public List<GeneralDepartment> GeneralDepartments { get; set; } = new();
 
@@ -95,7 +97,7 @@
     private void EditClick(GeneralDepartment generalDepartment)
     {
         generalDepartmentDialog?.ChangeTitle("Update");
-        GeneralDepartment = generalDepartment;
+        GeneralDepartmentParameter = generalDepartment;
         OpenDialog();
     }
 
@@ -104,7 +106,7 @@
         var confirm = await dialogService.ConfirmAsync($"Are you sure you want to delete {generalDepartment.Name}?", "Confirm Delete");
         if (!confirm) return;
         var response = await GeneralDepartmentService.Delete(Constants.GeneralDepartmentUrl, generalDepartment.Id);
-        if(await DisplayMessage(response.flag, response.message))
+        if (await DisplayMessage(response.flag, response.message))
         {
             await GetGeneralDepartments();
         }
@@ -137,13 +139,10 @@
     private async Task<bool> DisplayMessage(bool flag, string message)
     {
         if (flag)
-        {
             await dialogService.AlertAsync(message, "Success Operation");
-        }
         else
-        {
             await dialogService.AlertAsync(message, "Alert");
-        }
+
         return flag;
     }
 }

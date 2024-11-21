@@ -12,7 +12,9 @@ using Syncfusion.Blazor;
 using Syncfusion.Blazor.Popups;
 using Syncfusion.Licensing;
 
-SyncfusionLicenseProvider.RegisterLicense("MzU4NzQ2MUAzMjM3MmUzMDJlMzBGWVh1UkU0cjF1MjZzMmZHQnZoOVVQdlpYa09zWCtqbkpaMExuRFI3UFJFPQ==");
+var lilicenseKey = "Ngo9BigBOggjHTQxAR8/V1NDaF1cX2hIfEx0RXxbf1x0ZF1MYl5bRH5PIiBoS35RckRiW39ccHFRR2RZVkV0";
+//SyncfusionLicenseProvider.RegisterLicense("MzU4NzQ2MUAzMjM3MmUzMDJlMzBGWVh1UkU0cjF1MjZzMmZHQnZoOVVQdlpYa09zWCtqbkpaMExuRFI3UFJFPQ==");
+SyncfusionLicenseProvider.RegisterLicense(lilicenseKey);
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
