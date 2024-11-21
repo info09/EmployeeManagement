@@ -1,4 +1,5 @@
-﻿using EmployeeManagementSystem.ServerLibrary.Data;
+﻿using EmployeeManagementSystem.BaseLibrary.Entities;
+using EmployeeManagementSystem.ServerLibrary.Data;
 using EmployeeManagementSystem.ServerLibrary.Helper;
 using EmployeeManagementSystem.ServerLibrary.Repositories.Contracts;
 using EmployeeManagementSystem.ServerLibrary.Repositories.Implementations;
@@ -44,6 +45,12 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+builder.Services.AddScoped<IGenericRepository<GeneralDepartment>, GeneralDepartmentRepository>();
+builder.Services.AddScoped<IGenericRepository<Department>, DepartmentRepository>();
+builder.Services.AddScoped<IGenericRepository<Branch>, BranchRepository>();
+builder.Services.AddScoped<IGenericRepository<Country>, CountryRepository>();
+builder.Services.AddScoped<IGenericRepository<City>, CityRepository>();
+builder.Services.AddScoped<IGenericRepository<Town>, TownRepository>();
 
 builder.Services.AddCors(options =>
 {
