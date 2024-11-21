@@ -1,4 +1,5 @@
-﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+﻿@page "/general-departments"
+@using EmployeeManagementSystem.BaseLibrary.Dtos
 @using EmployeeManagementSystem.BaseLibrary.Entities
 @using EmployeeManagementSystem.ClientLibrary.Helpers
 @using Syncfusion.Blazor.Popups
@@ -7,66 +8,66 @@
 
 @if (allState.ShowGeneralDepartment)
 {
-    <div class="container-fluid mt-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="float-start">General Department</h4>
-                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
-                            <i class="bi bi-plus-circle-dotted"></i>Add Department
-                        </button>
-                    </div>
-                    <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">General Department</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (GeneralDepartments != null)
-                                {
-                                    int count = 1;
-                                    foreach (var item in GeneralDepartments)
-                                    {
-                                        <tr>
-                                            <th scope="row">@count</th>
-                                            <td>@item.Id</td>
-                                            <td>@item.Name</td>
-                                            <td>
-                                                <i class="bi bi-pencil text-info" style="cursor: pointer;" @onclick="() => EditClick(item)"></i>
-                                                <i class="bi bi-trash text-danger" style="cursor: pointer;" @onclick="() => DeleteClick(item)"></i>
-                                            </td>
-                                        </tr>
-                                        count++;
-                                    }
-                                }
-                                else
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="float-start">General Department</h4>
+                    <button class="btn btn-outline-success float-end" @onclick="OpenCreate">
+                        <i class="bi bi-plus-circle-dotted"></i>Add Department
+                    </button>
+                </div>
+                <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Id</th>
+                                <th scope="col">General Department</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (GeneralDepartments != null)
+                            {
+                                int count = 1;
+                                foreach (var item in GeneralDepartments)
                                 {
                                     <tr>
-                                        <td colspan="4">
-                                            <div class="alert alert-info text-center">No General Departments added yet!</div>
+                                        <th scope="row">@count</th>
+                                        <td>@item.Id</td>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            <i class="bi bi-pencil text-info" style="cursor: pointer;" @onclick="() => EditClick(item)"></i>
+                                            <i class="bi bi-trash text-danger" style="cursor: pointer;" @onclick="() => DeleteClick(item)"></i>
                                         </td>
                                     </tr>
+                                    count++;
                                 }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="alert alert-info text-center">No General Departments added yet!</div>
+                                    </td>
+                                </tr>
+                            }
 
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 }
-<GeneralDepartmentDialog @ref="generalDepartmentDialog" 
-                            HandleSaveOperationEvent="HandleSaveOperationEvent" 
-                            GeneralDepartment="GeneralDepartmentParameter" />
+<GeneralDepartmentDialog @ref="generalDepartmentDialog"
+                         HandleSaveOperationEvent="HandleSaveOperationEvent"
+                         GeneralDepartment="GeneralDepartmentParameter" />
 @code {
     GeneralDepartmentDialog? generalDepartmentDialog;
     GeneralDepartment GeneralDepartmentParameter = new();
@@ -76,6 +77,13 @@
     private void OpenDialog()
     {
         generalDepartmentDialog?.OpenDialog();
+    }
+
+    private void OpenCreate()
+    {
+        GeneralDepartmentParameter = new();
+        generalDepartmentDialog?.ChangeTitle("Add");
+        OpenDialog();
     }
 
     protected override async Task OnInitializedAsync()

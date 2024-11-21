@@ -1,7 +1,6 @@
 ﻿@page "/nav"
 @using EmployeeManagementSystem.Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AllState departmentState
 
 <AuthorizeView>
     <Authorized>
@@ -117,6 +116,7 @@
 
     private void GeneralDepartmentClicked()
     {
-        departmentState.GeneralDepartmentClicked();    
+        //NavManager.NavigateTo("/general-departments");
+        allState.GeneralDepartmentClicked();    
     }
 }
