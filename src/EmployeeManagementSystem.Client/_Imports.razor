@@ -11,9 +11,11 @@
 @using Microsoft.JSInterop
 @using EmployeeManagementSystem.Client
 @using EmployeeManagementSystem.Client.Layout
+@using Syncfusion.Blazor.Popups
 
 @inject NavigationManager NavManager
 @inject AllState allState
+@inject SfDialogService dialogService
 
 @* // GeneralDepartment / Department / Branch*@
 @inject IGenericService<GeneralDepartment> GeneralDepartmentService

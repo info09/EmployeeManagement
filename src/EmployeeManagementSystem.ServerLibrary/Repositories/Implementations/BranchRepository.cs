@@ -26,7 +26,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<Branch>> GetAll() => await _context.Branches.ToListAsync();
+        public async Task<List<Branch>> GetAll() => await _context.Branches.AsNoTracking().Include(i => i.Department).ToListAsync();
 
         public async Task<Branch> GetById(int id) => await _context.Branches.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -47,7 +47,12 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             if (item == null)
                 return NotFound();
 
+            var check = await CheckName(entity.Name!);
+            if (check && item.DepartmentId == entity.DepartmentId)
+                return new GeneralResponse(false, "Name already exist");
+
             item.Name = entity.Name;
+            item.DepartmentId = entity.DepartmentId;
             _context.SaveChanges();
             return Success();
         }

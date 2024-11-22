@@ -7,12 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\ContentPages\GeneralDepartmentPages\Department.razor" />
+    <Content Remove="Pages\ContentPages\GeneralDepartmentPages\DepartmentPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Syncfusion.Blazor.Buttons" Version="23.1.36" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="23.1.36" />
     <PackageReference Include="Syncfusion.Blazor.Popups" Version="23.1.36" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="23.1.36" />
   </ItemGroup>
@@ -31,6 +37,23 @@
     <Content Update="wwwroot\images\profile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ContentPages\GeneralDepartmentPages\DepartmentPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\ContentPages\GeneralDepartmentPages\Department.razor" />
+    <_ContentIncludedByDefault Remove="Pages\ContentPages\GeneralDepartmentPages\DepartmentPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\ContentPages\DepartmentPages\DepartmentPage.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ContentPages\GeneralDepartmentPages\Department.razor" />
   </ItemGroup>
 
 </Project>

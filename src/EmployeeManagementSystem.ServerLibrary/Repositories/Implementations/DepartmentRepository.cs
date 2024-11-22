@@ -26,7 +26,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<Department>> GetAll() => await _context.Departments.ToListAsync();
+        public async Task<List<Department>> GetAll() => await _context.Departments.AsNoTracking().Include(i => i.GeneralDepartment).ToListAsync();
 
         public async Task<Department> GetById(int id) => await _context.Departments.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -46,8 +46,12 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             var department = await _context.Departments.FindAsync(entity.Id);
             if (department == null)
                 return NotFound();
+            var check = await CheckName(entity.Name!);
+            if (check && department.GeneralDepartmentId == entity.GeneralDepartmentId)
+                return new GeneralResponse(false, "Name already exist");
 
             department.Name = entity.Name;
+            department.GeneralDepartmentId = entity.GeneralDepartmentId;
             _context.SaveChanges();
             return Success();
         }

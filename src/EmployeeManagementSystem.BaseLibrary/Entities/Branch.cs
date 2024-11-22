@@ -1,4 +1,6 @@
-﻿namespace EmployeeManagementSystem.BaseLibrary.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace EmployeeManagementSystem.BaseLibrary.Entities
 {
     public class Branch : BaseEntity
     {
@@ -7,6 +9,7 @@
         public Department? Department { get; set; }
 
         // Ont to many relationship with Employee
+        [JsonIgnore]
         public List<Employee>? Employees { get; set; }
     }
 }

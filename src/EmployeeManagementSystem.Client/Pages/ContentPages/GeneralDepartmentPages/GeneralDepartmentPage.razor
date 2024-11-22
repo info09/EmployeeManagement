@@ -1,10 +1,6 @@
 ﻿@page "/general-departments"
-@using EmployeeManagementSystem.BaseLibrary.Dtos
-@using EmployeeManagementSystem.BaseLibrary.Entities
 @using EmployeeManagementSystem.ClientLibrary.Helpers
-@using Syncfusion.Blazor.Popups
 @implements IDisposable
-@inject SfDialogService dialogService
 
 @if (allState.ShowGeneralDepartment)
 {
@@ -29,7 +25,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (GeneralDepartments != null)
+                            @if (GeneralDepartments != null && GeneralDepartments.Count > 0)
                             {
                                 int count = 1;
                                 foreach (var item in GeneralDepartments)

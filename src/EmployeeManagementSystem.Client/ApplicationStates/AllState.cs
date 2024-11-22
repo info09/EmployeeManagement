@@ -4,7 +4,7 @@
     {
         public Action? Action { get; set; }
 
-        // GeneralDepartment
+        #region GeneralDepartment
         public bool ShowGeneralDepartment { get; set; }
         public void GeneralDepartmentClicked()
         {
@@ -12,8 +12,10 @@
             ShowGeneralDepartment = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // Department
+
+        #region Department
         public bool ShowDepartment { get; set; }
         public void DepartmentClicked()
         {
@@ -21,8 +23,10 @@
             ShowDepartment = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // Branch
+
+        #region Branch
         public bool ShowBranch { get; set; }
         public void BranchClicked()
         {
@@ -30,8 +34,10 @@
             ShowBranch = true;
             Action?.Invoke();
         }
+        #endregion
 
-        //Country
+
+        #region Country
         public bool ShowCountry { get; set; }
         public void CountryClicked()
         {
@@ -39,8 +45,10 @@
             ShowCountry = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // City
+
+        #region City
         public bool ShowCity { get; set; }
         public void CityClicked()
         {
@@ -48,8 +56,10 @@
             ShowCity = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // Town
+
+        #region Town
         public bool ShowTown { get; set; }
         public void TownClicked()
         {
@@ -57,8 +67,10 @@
             ShowTown = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // User
+
+        #region User
         public bool ShowUser { get; set; }
         public void UserClicked()
         {
@@ -66,8 +78,10 @@
             ShowUser = true;
             Action?.Invoke();
         }
+        #endregion
 
-        // Employee
+
+        #region Employee
         public bool ShowEmployee { get; set; }
         public void EmployeeClicked()
         {
@@ -75,6 +89,7 @@
             ShowEmployee = true;
             Action?.Invoke();
         }
+        #endregion
 
         private void ResetAllDepartments()
         {
