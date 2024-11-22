@@ -48,7 +48,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
                 return NotFound();
 
             var check = await CheckName(entity.Name!);
-            if (check)
+            if (check && item.CountryId == entity.CountryId)
                 return new GeneralResponse(false, "Name already exist");
 
             item.Name = entity.Name;

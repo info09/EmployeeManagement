@@ -46,6 +46,9 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             var item = await _context.Countries.FindAsync(entity.Id);
             if (item == null)
                 return NotFound();
+            var check = await CheckName(entity.Name!);
+            if (check)
+                return new GeneralResponse(false, "Name already exist");
 
             item.Name = entity.Name;
             _context.SaveChanges();

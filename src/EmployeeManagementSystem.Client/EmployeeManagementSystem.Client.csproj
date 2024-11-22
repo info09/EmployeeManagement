@@ -56,8 +56,4 @@
     <UpToDateCheckInput Remove="Pages\ContentPages\GeneralDepartmentPages\Department.razor" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\ContentPages\TownPages\" />
-  </ItemGroup>
-
 </Project>
