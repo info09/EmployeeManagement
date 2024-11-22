@@ -32,10 +32,38 @@ namespace EmployeeManagementSystem.Server.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> Refresh([FromBody]RefreshTokenRequest refreshToken)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshToken)
         {
-            if(refreshToken == null) return BadRequest("Model is empty");
-            var result =  await _userAccountRepository.RefreshTokenAsync(refreshToken);
+            if (refreshToken == null) return BadRequest("Model is empty");
+            var result = await _userAccountRepository.RefreshTokenAsync(refreshToken);
+            return Ok(result);
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var result = await _userAccountRepository.GetUsers();
+            return Ok(result);
+        }
+
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _userAccountRepository.GetRoles();
+            return Ok(result);
+        }
+
+        [HttpPut("update-user")]
+        public async Task<IActionResult> UpdateUser([FromBody] ManageUser updateUser)
+        {
+            var result = await _userAccountRepository.UpdateUser(updateUser);
+            return Ok(result);
+        }
+
+        [HttpDelete("delete-user/{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _userAccountRepository.DeleteUser(id);
             return Ok(result);
         }
     }

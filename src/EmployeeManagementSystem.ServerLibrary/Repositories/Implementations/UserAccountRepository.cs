@@ -163,5 +163,47 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
 
             return new LoginResponse(true, "Refresh token success", jwtToken, refreshToken);
         }
+
+        public async Task<List<ManageUser>> GetUsers()
+        {
+            var allUsers = await _context.ApplicationUsers.AsNoTracking().ToListAsync();
+            var allUserRoles = await _context.UserRoles.AsNoTracking().ToListAsync();
+            var allRoles = await _context.SystemRoles.AsNoTracking().ToListAsync();
+
+            if (allUsers.Count == 0 || allUserRoles.Count == 0 || allRoles.Count == 0)
+                return null!;
+
+            var users = (from u in allUsers
+                         join ur in allUserRoles on u.Id equals ur.UserId
+                         join r in allRoles on ur.RoleId equals r.Id
+                         select new ManageUser
+                         {
+                             UserId = u.Id,
+                             Email = u.Email,
+                             Name = u.FullName,
+                             Role = r.Name
+                         }).ToList();
+
+            return users;
+        }
+
+        public async Task<List<SystemRole>> GetRoles() => await _context.SystemRoles.AsNoTracking().ToListAsync();
+
+        public async Task<GeneralResponse> UpdateUser(ManageUser user)
+        {
+            var getRole = await _context.SystemRoles.FirstOrDefaultAsync(i => i.Name!.Equals(user.Role!));
+            var userRole = await _context.UserRoles.FirstOrDefaultAsync(i => i.UserId == user.UserId);
+            userRole!.RoleId = getRole!.Id;
+            await _context.SaveChangesAsync();
+            return new GeneralResponse(true, "Update user successfully");
+        }
+
+        public async Task<GeneralResponse> DeleteUser(int id)
+        {
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(i => i.Id == id);
+            _context.ApplicationUsers.Remove(user!);
+            await _context.SaveChangesAsync();
+            return new GeneralResponse(true, "Delete user successfully");
+        }
     }
 }

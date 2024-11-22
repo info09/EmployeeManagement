@@ -1,0 +1,146 @@
+﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+@if (allState.ShowUser)
+{
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">User</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="AddButtonClicked">
+                            <i class="bi bi-plus-circle-dotted"></i>Add Town
+                        </button>
+                    </div>
+                    <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ListUser != null && ListUser.Count > 0)
+                                {
+                                    int count = 1;
+                                    foreach (var item in ListUser)
+                                    {
+                                        <tr>
+                                            <th scope="row">@count</th>
+                                            <td>@item.UserId</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Email</td>
+                                            <td>@item.Role</td>
+                                            <td>
+                                                <i class="bi bi-pencil text-info" style="cursor: pointer;" @onclick="() => EditClick(item)"></i>
+                                                <i class="bi bi-trash text-danger" style="cursor: pointer;" @onclick="() => DeleteClick(item)"></i>
+                                            </td>
+                                        </tr>
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="alert alert-info text-center">No Branch added yet!</div>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<UserDialog @ref="userDialog" HandleSaveOperationEvent="HandleSaveOperationEvent" ManageUser="ManageUser" SystemRoles="ListRole" />
+@code {
+    UserDialog? userDialog = new();
+    ManageUser ManageUser = new();
+    public List<ManageUser> ListUser { get; set; } = new();
+    public List<SystemRole> ListRole { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsers();
+        await GetRoles();
+        allState.Action += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+
+    private async Task GetUsers()
+    {
+        ListUser = await UserAccountService.GetUsers();
+    }
+
+    private async Task GetRoles()
+    {
+        ListRole = await UserAccountService.GetRoles();
+    }
+
+    private void AddButtonClicked()
+    {
+        ManageUser = new();
+        OpenDialog();
+    }
+
+    private void OpenDialog()
+    {
+        userDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(ManageUser manageUser)
+    {
+        bool isSuccess = false;
+
+        var result = await UserAccountService.UpdateUser(manageUser);
+        isSuccess = await DisplayMessage(result.flag, result.message);
+
+        if (isSuccess)
+        {
+            ManageUser = new();
+        }
+        await GetUsers();
+        StateHasChanged();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+            await dialogService.AlertAsync(message, "Success Operation");
+        else
+            await dialogService.AlertAsync(message, "Alert");
+
+        return flag;
+    }
+
+    private void EditClick(ManageUser user)
+    {
+        ManageUser = user;
+        OpenDialog();
+    }
+
+    private async void DeleteClick(ManageUser manageUser)
+    {
+        var confirm = await dialogService.ConfirmAsync($"Are you sure you want to delete {manageUser.Name}?", "Confirm Delete");
+        if (!confirm) return;
+        var response = await UserAccountService.DeleteUser(manageUser.UserId);
+        if (await DisplayMessage(response.flag, response.message))
+        {
+            await GetUsers();
+        }
+        StateHasChanged();
+    }
+}
