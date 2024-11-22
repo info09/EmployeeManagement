@@ -1,0 +1,196 @@
+﻿@using Syncfusion.Blazor.DropDowns
+@implements IDisposable
+
+@if (allState.ShowEmployee)
+{
+    if (ShowAddOrUpdateEmployeePage)
+    {
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-lg-1 text-center">
+                    <i class="bi bi-x-lg fs-3 fw-bold text-danger" style="cursor: pointer;" @onclick="CloseForm"></i>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <h2>Add Employee</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 mt-2 mb-5 d-flex justify-content-center">
+                    <div class="hstack">
+                        @if (FirstLayer)
+                        {
+                            <div class="@FloatingNumber1 text-center">1</div>
+                            <div class="@FloatingDiv1 format-border"></div>
+                            <div class="@FloatingNumber2 text-center">2</div>
+                            <div class="@FloatingDiv2 format-border"></div>
+                        }
+                        @if (SecondLayer)
+                        {
+                            <div class="@FloatingNumber1 text-center">1</div>
+                            <div class="@FloatingDiv1 format-border"></div>
+                            <div class="@FloatingNumber2 text-center">2</div>
+                            <div class="@FloatingDiv2 format-border"></div>
+                        }
+                    </div>
+
+                    @* Emplyee form / first / second *@
+                    <div class="col-lg-12">
+                        <div class="container-fluid">
+                            @if (FirstLayer)
+                            {
+                                <EditForm Enhance Model="EmployeeGroup1" OnValidSubmit="Form1">
+                                    <DataAnnotationsValidator />
+                                    <div class="row">
+                                        <div class="col-lg-2"></div>
+                                        <div class="col-lg-4">
+                                            <div class="card-title mb-5 fw-bold" style="font-family: Tahoma;">Personal Information</div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label class="form-label">FullName</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.Name" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.Name" class="text-danger" />
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <label class="form-label">Telephone Number</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.TelephoneNumber" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.TelephoneNumber" class="text-danger" />
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <label class="form-label">Address</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.Address" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.Address" class="text-danger" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 mt-2">
+                                            <div class="card-title mb-5 fw-bold" style="font-family: Tahoma;">Other Information</div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label class="form-label">CivilId</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.CivilId" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.CivilId" class="text-danger" />
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <label class="form-label">FileNumber</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.FileNumber" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.FileNumber" class="text-danger" />
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <label class="form-label">Photo</label>
+                                                    <InputText @bind-Value="EmployeeGroup1.TelephoneNumber" class="form-control" />
+                                                    <ValidationMessage For="() => EmployeeGroup1.TelephoneNumber" class="text-danger" />
+                                                </div>
+                                                <div class="form-group mt-5">
+                                                    <button class="btn btn-primary float-end mt-4 mb-5" type="submit">
+                                                        <i class="bi bi-arrow-right"></i>
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2"></div>
+                                    </div>
+                                </EditForm>
+                            }
+                            @if (SecondLayer)
+                            {
+                                <EditForm Enhance Model="EmployeeGroup1" OnValidSubmit="Form2">
+                                    <DataAnnotationsValidator />
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-4">
+                                        <div class="card-title mb-5 fw-bold" style="font-family: Tahoma;">Job Information</div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label class="form-label">JobName</label>
+                                                <InputText @bind-Value="EmployeeGroup2.JobName" class="form-control" />
+                                                <ValidationMessage For="() => EmployeeGroup2.JobName" class="text-danger" />
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(GeneralDepartmentName == "" ? $"Select GeneralDepartment" : $"Selected GeneralDepartment: {GeneralDepartmentName}")</label>
+                                                <SfDropDownList TValue="string" TItem="GeneralDepartment" Placeholder="Select GeneralDepartment" DataSource="GeneralDepartments">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="Department" ValueChange="OnGeneralDepartmentValueChange" />
+                                                </SfDropDownList>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(DepartmentName == "" ? $"Select GeneralDepartment" : $"Selected GeneralDepartment: {DepartmentName}")</label>
+                                                <SfDropDownList TValue="string" TItem="Department" Placeholder="Select Department" DataSource="Departments">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="Department" ValueChange="OnDepartmentValueChange" />
+                                                </SfDropDownList>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(Employee.Branch == null ? $"Select Branch" : $"Selected Branch: {Employee.Branch.Name}")</label>
+                                                <SfDropDownList TValue="string" TItem="Branch" Placeholder="Select Branch" DataSource="Branches">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="Branch" ValueChange="OnBranchValueChange" />
+                                                </SfDropDownList>
+                                                <ValidationMessage For="()=>EmployeeGroup2.BranchId" class="text-danger" />
+                                            </div>
+                                            <div class="form-group mt-4 mb-5">
+                                                <button class="btn btn-primary float-start" type="button" @onclick="PrevClicked">
+                                                    <i class="bi bi-arrow-left"></i>
+                                                    Prev
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card-title mb-5 fw-bold" style="font-family: Tahoma;">Location Information</div>
+                                        <div class="card-body">
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(CountryName == "" ? $"Select Country" : $"Selected Country: {CountryName}")</label>
+                                                <SfDropDownList TValue="string" TItem="Country" Placeholder="Select Country" DataSource="Countries">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="Country" ValueChange="OnCountryValueChange" />
+                                                </SfDropDownList>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(CityName == "" ? $"Select City" : $"Selected City: {CityName}")</label>
+                                                <SfDropDownList TValue="string" TItem="City" Placeholder="Select City" DataSource="Cities">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="City" ValueChange="OnCityValueChange" />
+                                                </SfDropDownList>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">@(TownName == "" ? $"Select Town" : $"Selected Town: {TownName}")</label>
+                                                <SfDropDownList TValue="string" TItem="Town" Placeholder="Select Town" DataSource="Towns">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name" />
+                                                    <DropDownListEvents TValue="string" TItem="Town" ValueChange="OnTownValueChange" />
+                                                </SfDropDownList>
+                                                <ValidationMessage For="()=>EmployeeGroup2.TownId" class="text-danger" />
+                                            </div>
+                                            <div class="form-group mt-3">
+                                                <label class="form-label">Other</label>
+                                                <InputText @bind-Value="EmployeeGroup2.Other" class="form-control" />
+                                                <ValidationMessage For="() => EmployeeGroup2.Other" class="text-danger" />
+                                            </div>
+                                            <div class="form-group mt-4 mb-5">
+                                                <button class="btn btn-primary float-end" type="submit">
+                                                    <i class="bi bi-save"></i>
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-12"></div>
+                                </EditForm>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code{
+    public Employee Employee { get; set; }
+    private void CloseForm(){}
+
+    public void OnValuOnGeneralDepartmentValueChangeeChange(ChangeEventArgs<string, GeneralDepartment> e)
+    {
+        StateHasChanged();
+    }
+}
