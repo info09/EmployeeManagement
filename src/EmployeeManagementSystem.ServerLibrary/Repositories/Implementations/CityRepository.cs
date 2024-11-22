@@ -26,7 +26,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<City>> GetAll() => await _context.Cities.ToListAsync();
+        public async Task<List<City>> GetAll() => await _context.Cities.AsNoTracking().Include(i => i.Country).ToListAsync();
 
         public async Task<City> GetById(int id) => await _context.Cities.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -47,7 +47,12 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
             if (item == null)
                 return NotFound();
 
+            var check = await CheckName(entity.Name!);
+            if (check)
+                return new GeneralResponse(false, "Name already exist");
+
             item.Name = entity.Name;
+            item.CountryId = entity.CountryId;
             _context.SaveChanges();
             return Success();
         }
