@@ -92,15 +92,16 @@
         ListBranch = await BranchService.GetAll(Constants.BranchUrl);
     }
 
-    private void AddButtonClicked()
+    private async Task AddButtonClicked()
     {
         branchDialog?.ChangeTitle("Add");
         Branch = new();
-        OpenDialog();
+        await OpenDialog();
     }
 
-    private void OpenDialog()
+    private async Task OpenDialog()
     {
+        await GetDepartments();
         branchDialog?.OpenDialog();
     }
 
@@ -137,11 +138,11 @@
         return flag;
     }
 
-    private void EditClick(Branch branch)
+    private async Task EditClick(Branch branch)
     {
         branchDialog?.ChangeTitle("Update");
         Branch = branch;
-        OpenDialog();
+        await OpenDialog();
     }
 
     private async void DeleteClick(Branch branch)

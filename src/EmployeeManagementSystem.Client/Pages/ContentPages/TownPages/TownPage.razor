@@ -93,15 +93,16 @@
         ListCity = await CityService.GetAll(Constants.CityUrl);
     }
 
-    private void AddButtonClicked()
+    private async Task AddButtonClicked()
     {
         townDialog?.ChangeTitle("Add");
         Town = new();
-        OpenDialog();
+        await OpenDialog();
     }
 
-    private void OpenDialog()
+    private async Task OpenDialog()
     {
+        await GetCities();
         townDialog?.OpenDialog();
     }
 
@@ -124,7 +125,7 @@
 
             townDialog?.ChangeTitle("Add");
         }
-        await GetCities();
+        await GetTowns();
         StateHasChanged();
     }
 
@@ -138,11 +139,11 @@
         return flag;
     }
 
-    private void EditClick(Town town)
+    private async Task EditClick(Town town)
     {
         townDialog?.ChangeTitle("Update");
         Town = town;
-        OpenDialog();
+        await OpenDialog();
     }
 
     private async void DeleteClick(Town town)

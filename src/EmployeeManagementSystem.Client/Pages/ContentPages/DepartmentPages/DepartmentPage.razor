@@ -92,15 +92,16 @@
         ListGeneralDepartment = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
     }
 
-    private void AddButtonClicked()
+    private async Task AddButtonClicked()
     {
         departmentDialog?.ChangeTitle("Add");
         Department = new();
-        OpenDialog();
+        await OpenDialog();
     }
 
-    private void OpenDialog()
+    private async Task OpenDialog()
     {
+        await GetGeneralDepartments();
         departmentDialog?.OpenDialog();
     }
 
@@ -137,11 +138,11 @@
         return flag;
     }
 
-    private void EditClick(Department department)
+    private async Task EditClick(Department department)
     {
         departmentDialog?.ChangeTitle("Update");
         Department = department;
-        OpenDialog();
+        await OpenDialog();
     }
 
     private async void DeleteClick(Department department)
