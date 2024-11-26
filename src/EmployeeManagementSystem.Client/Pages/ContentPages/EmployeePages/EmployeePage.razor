@@ -43,10 +43,41 @@
     }
 }
 
-<AddOrUpdateEmployeePage ShowAddOrUpdateEmployee="ShowAddOrUpdatePage" />
+<AddOrUpdateEmployeePage @ref="addOrUpdateEmployeePage" 
+                        Employee="Employee"
+                        ShowAddOrUpdateEmployee="ShowAddOrUpdatePage" 
+                        NotifyParentFormCloseClicked="NotifyParentFormCloseClicked"
+                         Countries="DefaultCountries"
+                         Cities="SelectedCities"
+                         Towns="SelectedTowns"
+                         GeneralDepartments="DefaultGeneralDepartments"
+                         Departments="SelectedDepartments"
+                         Branches="SelectedBranches" 
+                         HandleCountrySelectedEvent="HandleCountrySelectedEvent"
+                         HandleCitySelectedEvent="HandleCitySelectedEvent" 
+                         HandleGeneralDepartmentSelectedEvent="HandleGeneralDepartmentSelectedEvent"
+                         HandleDepartmentSelectedEvent="HandleDepartmentSelectedEvent"
+                         HandleSaveEmployeeClickedEvent="HandleSaveEmployeeClickedEvent" />
 
 @code {
+    AddOrUpdateEmployeePage? addOrUpdateEmployeePage;
     public List<Employee> Employees { get; set; } = new();
+    public Employee Employee { get; set; } = new();
+
+    // Country / City / Town
+    public List<Country> DefaultCountries { get; set; } = new();
+    public List<City> DefaultCities { get; set; } = new();
+    public List<Town> DefaultTowns { get; set; } = new();
+
+    public List<GeneralDepartment> DefaultGeneralDepartments { get; set; } = new();
+    public List<Department> DefaultDepartments { get; set; } = new();
+    public List<Branch> DefaultBranches { get; set; } = new();
+
+    public List<Department> SelectedDepartments { get; set; } = [];
+    public List<City> SelectedCities { get; set; } = [];
+    public List<Branch> SelectedBranches { get; set; } = [];
+    public List<Town> SelectedTowns { get; set; } = [];
+
     private async Task LoadEmployees()
     {
         Employees = await EmployeeService.GetAll(Constants.EmployeeUrl);
@@ -54,11 +85,80 @@
 
     protected override async Task OnInitializedAsync()
     {
+        ShowMainPage = true;
         allState.Action += StateHasChanged;
+        await LoadEmployees();
+        await LoadDefault();
+    }
+
+    private async Task LoadDefault()
+    {
+        DefaultCountries = await CountryService.GetAll(Constants.CountryUrl);
+        DefaultCities = await CityService.GetAll(Constants.CityUrl);
+        DefaultTowns = await TownService.GetAll(Constants.TownUrl);
+
+        DefaultGeneralDepartments = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
+        DefaultDepartments = await DepartmentService.GetAll(Constants.DepartmentUrl);
+        DefaultBranches = await BranchService.GetAll(Constants.BranchUrl);
+    }
+
+    //Country select
+    private void HandleCountrySelectedEvent(int countryId) => SelectedCities = DefaultCities.Where(i => i.CountryId == countryId).ToList();
+
+    //City select
+    private void HandleCitySelectedEvent(int cityId) => SelectedTowns = DefaultTowns.Where(i => i.CityId == cityId).ToList();
+
+    //GeneralDepartment select
+    private void HandleGeneralDepartmentSelectedEvent(int generalDepartmentId)
+    {
+        SelectedDepartments = DefaultDepartments.Where(i => i.GeneralDepartmentId == generalDepartmentId).ToList();
+        var a = 0;
+    }
+
+    //Department select
+    private void HandleDepartmentSelectedEvent(int departmentId) => SelectedBranches = DefaultBranches.Where(i => i.DepartmentId == departmentId).ToList();
+
+    private async Task HandleSaveEmployeeClickedEvent(Employee employee)
+    {
+        bool isSuccess = false;
+        if (employee.Id > 0)
+        {
+            var result = await EmployeeService.Update(Constants.EmployeeUrl, employee);
+            isSuccess = await DisplayMessage(result.flag, result.message);
+        }
+        else
+        {
+            var result = await EmployeeService.Insert(Constants.EmployeeUrl, employee);
+            isSuccess = await DisplayMessage(result.flag, result.message);
+        }
+        if (isSuccess)
+        {
+            employee = new();
+
+            addOrUpdateEmployeePage!.ClearContent();
+        }
+        
+        StateHasChanged();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+            await dialogService.AlertAsync(message, "Success Operation");
+        else
+            await dialogService.AlertAsync(message, "Alert");
+
+        return flag;
+    }
+
+    private async void NotifyParentFormCloseClicked()
+    {
+        ShowMainPage = true;
+        ShowAddOrUpdatePage = false;
         await LoadEmployees();
     }
 
-    public bool ShowMainPage { get; set; } = true;
+    public bool ShowMainPage { get; set; } = false;
     public bool ShowAddOrUpdatePage { get; set; } = false;
     private void ShowAddOrUpdateEmployeeButtonClicked()
     {
