@@ -12,7 +12,7 @@ using Syncfusion.Blazor;
 using Syncfusion.Blazor.Popups;
 using Syncfusion.Licensing;
 
-var licenseKey = "Ngo9BigBOggjHTQxAR8/V1NDaF1cX2hIf0x0TXxbf1x0ZFBMYF1bRHZPMyBoS35RckRiW35edXRURmBZU01+";
+var licenseKey = "MzU5NjE2MUAzMjM3MmUzMDJlMzBGWVh1UkU0cjF1MjZzMmZHQnZoOVVQdlpYa09zWCtqbkpaMExuRFI3UFJFPQ==";
 SyncfusionLicenseProvider.RegisterLicense(licenseKey);
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
