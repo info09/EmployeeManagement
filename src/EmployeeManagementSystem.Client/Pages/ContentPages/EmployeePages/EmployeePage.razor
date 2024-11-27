@@ -112,7 +112,6 @@
     private void HandleGeneralDepartmentSelectedEvent(int generalDepartmentId)
     {
         SelectedDepartments = DefaultDepartments.Where(i => i.GeneralDepartmentId == generalDepartmentId).ToList();
-        var a = 0;
     }
 
     //Department select
@@ -151,7 +150,7 @@
         return flag;
     }
 
-    private async void NotifyParentFormCloseClicked()
+    private async Task NotifyParentFormCloseClicked()
     {
         ShowMainPage = true;
         ShowAddOrUpdatePage = false;
