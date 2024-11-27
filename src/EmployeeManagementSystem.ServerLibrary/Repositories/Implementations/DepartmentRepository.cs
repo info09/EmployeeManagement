@@ -63,7 +63,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
 
         public async Task<PagedList<Department>> GetAllPaging(string? keyword, PagingParameters pagingParameters)
         {
-            var query = _context.Departments.AsQueryable();
+            var query = _context.Departments.Include(i => i.GeneralDepartment).AsQueryable();
             if (!string.IsNullOrEmpty(keyword))
                 query = query.Where(i => i.Name.ToLower().Contains(keyword.ToLower()));
 

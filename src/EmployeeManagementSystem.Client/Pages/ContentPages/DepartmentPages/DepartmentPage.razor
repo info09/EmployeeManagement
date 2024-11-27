@@ -1,4 +1,7 @@
-﻿@using EmployeeManagementSystem.ClientLibrary.Helpers
+﻿@using EmployeeManagementSystem.BaseLibrary.SeedWorks
+@using EmployeeManagementSystem.Client.Components
+@using EmployeeManagementSystem.ClientLibrary.Helpers
+@using EmployeeManagementSystem.ClientLibrary.Models
 @implements IDisposable
 @if (allState.ShowDepartment)
 {
@@ -24,10 +27,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (ListDepartment != null && ListDepartment.Count > 0)
+                                @if (PageListDepartment != null && PageListDepartment.Items.Count > 0)
                                 {
                                     int count = 1;
-                                    foreach (var item in ListDepartment)
+                                    foreach (var item in PageListDepartment.Items)
                                     {
                                         <tr>
                                             <th scope="row">@count</th>
@@ -50,10 +53,11 @@
                                         </td>
                                     </tr>
                                 }
-
-
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-footer">
+                        <Pagination MetaData="PageListDepartment!.MetaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
                     </div>
                 </div>
             </div>
@@ -69,6 +73,8 @@
     Department Department = new();
     public List<Department> ListDepartment { get; set; } = new();
     public List<GeneralDepartment> ListGeneralDepartment { get; set; } = new();
+    public PagedList<Department> PageListDepartment { get; set; } = new();
+    public GenericSearch Search { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,6 +91,7 @@
     private async Task GetDepartments()
     {
         ListDepartment = await DepartmentService.GetAll(Constants.DepartmentUrl);
+        PageListDepartment = await DepartmentService.GetAllPaging($"{Constants.DepartmentUrl}/paging", Search);
     }
 
     private async Task GetGeneralDepartments()
@@ -103,6 +110,12 @@
     {
         await GetGeneralDepartments();
         departmentDialog?.OpenDialog();
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        Search.PageNumber = page;
+        await GetDepartments();
     }
 
     private async Task HandleSaveOperationEvent(Department department)
