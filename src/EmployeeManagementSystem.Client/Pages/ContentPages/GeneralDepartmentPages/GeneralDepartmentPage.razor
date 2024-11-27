@@ -1,64 +1,68 @@
 ﻿@page "/general-departments"
+@using EmployeeManagementSystem.BaseLibrary.SeedWorks
+@using EmployeeManagementSystem.Client.Components
 @using EmployeeManagementSystem.ClientLibrary.Helpers
+@using EmployeeManagementSystem.ClientLibrary.Models
 @implements IDisposable
 
 @if (allState.ShowGeneralDepartment)
 {
-<div class="container-fluid mt-5">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="float-start">General Department</h4>
-                    <button class="btn btn-outline-success float-end" @onclick="OpenCreate">
-                        <i class="bi bi-plus-circle-dotted"></i>Add Department
-                    </button>
-                </div>
-                <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Id</th>
-                                <th scope="col">General Department</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (GeneralDepartments != null && GeneralDepartments.Count > 0)
-                            {
-                                int count = 1;
-                                foreach (var item in GeneralDepartments)
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">General Department</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenCreate">
+                            <i class="bi bi-plus-circle-dotted"></i>Add Department
+                        </button>
+                    </div>
+                    <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">General Department</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (PageListGeneralDepartment != null && PageListGeneralDepartment.Items.Count > 0)
+                                {
+                                    int count = 1;
+                                    foreach (var item in PageListGeneralDepartment.Items)
+                                    {
+                                        <tr>
+                                            <th scope="row">@count</th>
+                                            <td>@item.Id</td>
+                                            <td>@item.Name</td>
+                                            <td>
+                                                <i class="bi bi-pencil text-info" style="cursor: pointer;" @onclick="() => EditClick(item)"></i>
+                                                <i class="bi bi-trash text-danger" style="cursor: pointer;" @onclick="() => DeleteClick(item)"></i>
+                                            </td>
+                                        </tr>
+                                        count++;
+                                    }
+                                }
+                                else
                                 {
                                     <tr>
-                                        <th scope="row">@count</th>
-                                        <td>@item.Id</td>
-                                        <td>@item.Name</td>
-                                        <td>
-                                            <i class="bi bi-pencil text-info" style="cursor: pointer;" @onclick="() => EditClick(item)"></i>
-                                            <i class="bi bi-trash text-danger" style="cursor: pointer;" @onclick="() => DeleteClick(item)"></i>
+                                        <td colspan="4">
+                                            <div class="alert alert-info text-center">No General Departments added yet!</div>
                                         </td>
                                     </tr>
-                                    count++;
                                 }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="alert alert-info text-center">No General Departments added yet!</div>
-                                    </td>
-                                </tr>
-                            }
-
-
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <Pagination MetaData="PageListGeneralDepartment!.MetaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 }
 <GeneralDepartmentDialog @ref="generalDepartmentDialog"
@@ -69,6 +73,9 @@
     GeneralDepartment GeneralDepartmentParameter = new();
     public string Title { get; set; } = "Add";
     public List<GeneralDepartment> GeneralDepartments { get; set; } = new();
+    public PagedList<GeneralDepartment> PageListGeneralDepartment { get; set; } = new();
+    public MetaData MetaData { get; set; } = new MetaData();
+    public GenericSearch Search = new ();
 
     private void OpenDialog()
     {
@@ -80,6 +87,12 @@
         GeneralDepartmentParameter = new();
         generalDepartmentDialog?.ChangeTitle("Add");
         OpenDialog();
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        Search.PageNumber = page;
+        await GetGeneralDepartments();
     }
 
     protected override async Task OnInitializedAsync()
@@ -96,6 +109,8 @@
     private async Task GetGeneralDepartments()
     {
         GeneralDepartments = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
+
+        PageListGeneralDepartment = await GeneralDepartmentService.GetAllPaging(Constants.GeneralDepartmentUrl+"/paging", Search);
     }
 
     private void EditClick(GeneralDepartment generalDepartment)

@@ -82,7 +82,7 @@
 
 
         #region Employee
-        public bool ShowEmployee { get; set; } = true;
+        public bool ShowEmployee { get; set; }
         public void EmployeeClicked()
         {
             ResetAllDepartments();
