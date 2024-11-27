@@ -1,4 +1,5 @@
 ﻿using EmployeeManagementSystem.BaseLibrary.Response;
+using EmployeeManagementSystem.BaseLibrary.SeedWorks;
 using EmployeeManagementSystem.ClientLibrary.Helpers;
 using EmployeeManagementSystem.ClientLibrary.Services.Contracts;
 using System.Net.Http.Json;
@@ -26,6 +27,14 @@ namespace EmployeeManagementSystem.ClientLibrary.Services.Implementations
         {
             var httpClient = await _httpClient.GetPrivateHttpClient();
             var response = await httpClient.GetFromJsonAsync<List<T>>($"{baseUrl}");
+            return response!;
+        }
+
+        public async Task<PagedList<T>> GetAllPaging(string baseUrl, string keyword, PagingParameters parameters)
+        {
+            //paging?PageNumber=1&PageSize=10
+            var httpClient = await _httpClient.GetPrivateHttpClient();
+            var response = await httpClient.GetFromJsonAsync<PagedList<T>>($"{baseUrl}?keyword={keyword}&PageNumber={parameters.PageNumber}&PageSize={parameters.PageSize}");
             return response!;
         }
 

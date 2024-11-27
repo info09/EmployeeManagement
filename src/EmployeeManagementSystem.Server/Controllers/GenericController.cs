@@ -1,4 +1,5 @@
-﻿using EmployeeManagementSystem.ServerLibrary.Repositories.Contracts;
+﻿using EmployeeManagementSystem.BaseLibrary.SeedWorks;
+using EmployeeManagementSystem.ServerLibrary.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Server.Controllers
@@ -12,6 +13,12 @@ namespace EmployeeManagementSystem.Server.Controllers
         public GenericController(IGenericRepository<T> genericRepository)
         {
             _genericRepository = genericRepository;
+        }
+
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging(string? keyword, [FromQuery] PagingParameters parameters)
+        {
+            return Ok(await _genericRepository.GetAllPaging(keyword, parameters));
         }
 
         [HttpGet]
