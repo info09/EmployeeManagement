@@ -5,5 +5,6 @@ namespace EmployeeManagementSystem.ClientLibrary.Models
     public class GenericSearch : PagingParameters
     {
         public string? Keyword { get; set; }
+        public int? BranchId { get; set; }
     }
 }

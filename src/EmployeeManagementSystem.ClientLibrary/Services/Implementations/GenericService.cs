@@ -33,9 +33,8 @@ namespace EmployeeManagementSystem.ClientLibrary.Services.Implementations
 
         public async Task<PagedList<T>> GetAllPaging(string baseUrl, GenericSearch search)
         {
-            //paging?PageNumber=1&PageSize=10
             var httpClient = await _httpClient.GetPrivateHttpClient();
-            var response = await httpClient.GetFromJsonAsync<PagedList<T>>($"{baseUrl}?keyword={search.Keyword}&PageNumber={search.PageNumber}&PageSize={search.PageSize}");
+            var response = await httpClient.GetFromJsonAsync<PagedList<T>>($"{baseUrl}?branchId={search.BranchId}&keyword={search.Keyword}&PageNumber={search.PageNumber}&PageSize={search.PageSize}");
             return response!;
         }
 

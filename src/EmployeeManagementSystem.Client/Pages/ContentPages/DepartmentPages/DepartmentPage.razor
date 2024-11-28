@@ -11,20 +11,16 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="float-start">Department</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="AddButtonClicked">
+                            <i class="bi bi-plus-circle-dotted"></i> Add Department
+                        </button>
                     </div>
                     <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
                         <div class="row mb-3">
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <InputText @bind-Value="Search.Keyword" class="form-control" placeholder="Search..." />
-                                    <button class="btn btn-outline-primary" type="button" @onclick="ApplySearch">
-                                        <i class="bi bi-search"></i> Search
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-outline-success" @onclick="AddButtonClicked">
-                                    <i class="bi bi-plus-circle-dotted"></i> Add Department
+                            <div class="input-group">
+                                <InputText @bind-Value="Search.Keyword" class="form-control" placeholder="Search..." />
+                                <button class="btn btn-outline-primary" type="button" @onclick="ApplySearch">
+                                    <i class="bi bi-search"></i> Search
                                 </button>
                             </div>
                         </div>

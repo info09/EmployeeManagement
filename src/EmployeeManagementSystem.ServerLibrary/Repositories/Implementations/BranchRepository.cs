@@ -62,7 +62,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
         private static GeneralResponse Success() => new GeneralResponse(true, "Success");
         private async Task<bool> CheckName(string name) => await _context.Branches.AnyAsync(x => x.Name == name);
 
-        public async Task<PagedList<Branch>> GetAllPaging(string? keyword, PagingParameters pagingParameters)
+        public async Task<PagedList<Branch>> GetAllPaging(int? branchId, string? keyword, PagingParameters pagingParameters)
         {
             var query = _context.Branches.AsQueryable();
             if (!string.IsNullOrEmpty(keyword))

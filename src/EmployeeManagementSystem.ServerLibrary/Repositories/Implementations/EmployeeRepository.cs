@@ -89,7 +89,7 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
         private static GeneralResponse Success() => new GeneralResponse(true, "Success");
         private async Task<bool> CheckName(string name) => await _context.Branches.AnyAsync(x => x.Name == name);
 
-        public async Task<PagedList<Employee>> GetAllPaging(string? keyword, PagingParameters pagingParameters)
+        public async Task<PagedList<Employee>> GetAllPaging(int? branchId, string? keyword, PagingParameters pagingParameters)
         {
             var query = _context.Employees
                 .Include(e => e.Branch)
@@ -97,6 +97,9 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
                 .ThenInclude(i => i.GeneralDepartment).AsQueryable();
             if (!string.IsNullOrEmpty(keyword))
                 query = query.Where(i => i.Name.ToLower().Contains(keyword.ToLower()));
+
+            if(branchId.HasValue)
+                query = query.Where(i => i.BranchId == branchId.Value);
 
             var data = await query.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize).Take(pagingParameters.PageSize).ToListAsync();
             var count = await query.CountAsync();

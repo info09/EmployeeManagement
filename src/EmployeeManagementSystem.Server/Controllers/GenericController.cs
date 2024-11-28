@@ -16,9 +16,9 @@ namespace EmployeeManagementSystem.Server.Controllers
         }
 
         [HttpGet("paging")]
-        public async Task<IActionResult> GetAllPaging(string? keyword, [FromQuery] PagingParameters parameters)
+        public async Task<IActionResult> GetAllPaging(int? branchId, string? keyword, [FromQuery] PagingParameters parameters)
         {
-            return Ok(await _genericRepository.GetAllPaging(keyword, parameters));
+            return Ok(await _genericRepository.GetAllPaging(branchId, keyword, parameters));
         }
 
         [HttpGet]

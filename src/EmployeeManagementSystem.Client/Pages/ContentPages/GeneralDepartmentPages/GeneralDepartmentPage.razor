@@ -13,20 +13,16 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="float-start">General Department</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenCreate">
+                            <i class="bi bi-plus-circle-dotted"></i> Add General Department
+                        </button>
                     </div>
                     <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
                         <div class="row mb-3">
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <InputText @bind-Value="Search.Keyword" class="form-control" placeholder="Search..." />
-                                    <button class="btn btn-outline-primary" type="button" @onclick="ApplySearch">
-                                        <i class="bi bi-search"></i> Search
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-outline-success" @onclick="OpenCreate">
-                                    <i class="bi bi-plus-circle-dotted"></i> Add General Department
+                            <div class="input-group">
+                                <InputText @bind-Value="Search.Keyword" class="form-control" placeholder="Search..." />
+                                <button class="btn btn-outline-primary" type="button" @onclick="ApplySearch">
+                                    <i class="bi bi-search"></i> Search
                                 </button>
                             </div>
                         </div>
@@ -87,7 +83,7 @@
     public List<GeneralDepartment> GeneralDepartments { get; set; } = new();
     public PagedList<GeneralDepartment> PageListGeneralDepartment { get; set; } = new();
     public MetaData MetaData { get; set; } = new MetaData();
-    public GenericSearch Search = new ();
+    public GenericSearch Search = new();
 
     private void OpenDialog()
     {
@@ -127,7 +123,7 @@
     {
         GeneralDepartments = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
 
-        PageListGeneralDepartment = await GeneralDepartmentService.GetAllPaging(Constants.GeneralDepartmentUrl+"/paging", Search);
+        PageListGeneralDepartment = await GeneralDepartmentService.GetAllPaging(Constants.GeneralDepartmentUrl + "/paging", Search);
     }
 
     private void EditClick(GeneralDepartment generalDepartment)
