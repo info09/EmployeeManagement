@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using EmployeeManagementSystem.BaseLibrary.Entities;
+using EmployeeManagementSystem.BaseLibrary.VietNam;
 using EmployeeManagementSystem.Client;
 using EmployeeManagementSystem.Client.ApplicationStates;
 using EmployeeManagementSystem.ClientLibrary.Helpers;
@@ -51,6 +52,12 @@ builder.Services.AddScoped<IGenericService<Town>, GenericService<Town>>();
 #region Employee
 
 builder.Services.AddScoped<IGenericService<Employee>, GenericService<Employee>>();
+
+#endregion
+
+#region Place
+
+builder.Services.AddScoped<IPlaceService, PlaceService>();
 
 #endregion
 

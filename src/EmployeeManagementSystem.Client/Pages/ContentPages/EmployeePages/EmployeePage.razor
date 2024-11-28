@@ -1,4 +1,5 @@
-﻿@using EmployeeManagementSystem.ClientLibrary.Helpers
+﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.ClientLibrary.Helpers
 @using Syncfusion.Blazor.Grids
 @implements IDisposable
 @if (allState.ShowEmployee)
@@ -69,6 +70,10 @@
     public List<City> DefaultCities { get; set; } = new();
     public List<Town> DefaultTowns { get; set; } = new();
 
+    public List<ProvinceDto> DefaultProvinces { get; set; } = new();
+    public List<DistrictDto> DefaultDistricts { get; set; } = new();
+    public List<WardDto> DefaultWards { get; set; } = new();
+
     public List<GeneralDepartment> DefaultGeneralDepartments { get; set; } = new();
     public List<Department> DefaultDepartments { get; set; } = new();
     public List<Branch> DefaultBranches { get; set; } = new();
@@ -93,6 +98,8 @@
 
     private async Task LoadDefault()
     {
+        DefaultProvinces = await PlaceService.GetProvinceListAsync();
+
         DefaultCountries = await CountryService.GetAll(Constants.CountryUrl);
         DefaultCities = await CityService.GetAll(Constants.CityUrl);
         DefaultTowns = await TownService.GetAll(Constants.TownUrl);
