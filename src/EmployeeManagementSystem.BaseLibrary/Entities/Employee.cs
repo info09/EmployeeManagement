@@ -22,7 +22,6 @@ namespace EmployeeManagementSystem.BaseLibrary.Entities
         public Branch? Branch { get; set; }
         public int BranchId { get; set; }
 
-        public Town? Town { get; set; }
-        public int TownId { get; set; }
+        public string? TownId { get; set; }
     }
 }

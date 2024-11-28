@@ -70,33 +70,6 @@
                                 <hr />
                             </li>
                             <li style="list-style: none; cursor: pointer;">
-                                <a class="nav-link p-2" @onclick="CountryClicked">
-                                    <div class="hstack text-wrap">
-                                        <span class="bi bi-geo-alt fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
-                                        <span>Country</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li style="list-style: none; cursor: pointer;">
-                                <a class="nav-link p-2" @onclick="CityClicked">
-                                    <div class="hstack text-wrap">
-                                        <span class="bi bi-pin-map fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
-                                        <span>City</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li style="list-style: none; cursor: pointer;">
-                                <a class="nav-link p-2" @onclick="TownClicked">
-                                    <div class="hstack text-wrap">
-                                        <span class="bi bi-geo fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
-                                        <span>Town</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li style="list-style: none">
-                                <hr />
-                            </li>
-                            <li style="list-style: none; cursor: pointer;">
                                 <a class="nav-link p-2" @onclick="EmployeeClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem;"></span>
@@ -160,13 +133,6 @@
     private void BranchClicked() => allState.BranchClicked();
     #endregion
     
-    #region Country / City / Town
-    private void CountryClicked() => allState.CountryClicked();
-
-    private void CityClicked() => allState.CityClicked();
-
-    private void TownClicked() => allState.TownClicked();
-    #endregion
 
     #region Employee
     private void EmployeeClicked() => allState.EmployeeClicked();

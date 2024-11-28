@@ -41,14 +41,6 @@ builder.Services.AddScoped<IGenericService<Branch>, GenericService<Branch>>();
 
 #endregion
 
-#region Country / City / Town
-
-builder.Services.AddScoped<IGenericService<Country>, GenericService<Country>>();
-builder.Services.AddScoped<IGenericService<City>, GenericService<City>>();
-builder.Services.AddScoped<IGenericService<Town>, GenericService<Town>>();
-
-#endregion
-
 #region Employee
 
 builder.Services.AddScoped<IGenericService<Employee>, GenericService<Employee>>();

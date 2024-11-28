@@ -57,11 +57,7 @@
                                                 <InputText @bind-Value="EmployeeGroup1.TelephoneNumber" class="form-control" />
                                                 <ValidationMessage For="() => EmployeeGroup1.TelephoneNumber" class="text-danger" />
                                             </div>
-                                            <div class="form-group mt-2">
-                                                <label class="form-label">Address</label>
-                                                <InputText @bind-Value="EmployeeGroup1.Address" class="form-control" />
-                                                <ValidationMessage For="() => EmployeeGroup1.Address" class="text-danger" />
-                                            </div>
+                                            
                                             <div class="form-control mt-2">
                                                 <img src="@EmployeeGroup1.Photo" width="100" height="100" />
                                             </div>
@@ -159,10 +155,10 @@
                                                 @{
                                                     var country = Country.Equals("") ? "Select country" : Country;
                                                 }
-                                                <label class="form-label">Select country</label>
-                                                <SfDropDownList TValue="string" TItem="Country" Placeholder="Select Country" DataSource="Countries">
+                                                <label class="form-label">Select province</label>
+                                                <SfDropDownList TValue="string" TItem="ProvinceDto" Placeholder="Select province" DataSource="Provinces">
                                                     <DropDownListFieldSettings Value="Id" Text="Name" />
-                                                    <DropDownListEvents TValue="string" TItem="Country" ValueChange="OnCountryValueChange" />
+                                                    <DropDownListEvents TValue="string" TItem="ProvinceDto" ValueChange="OnProvinceValueChange" />
                                                 </SfDropDownList>
                                             </div>
                                             <div class="form-group mt-2">
@@ -170,9 +166,9 @@
                                                     var city = Country.Equals("") ? "Select city" : City;
                                                 }
                                                 <label class="form-label">Select city</label>
-                                                <SfDropDownList TValue="string" TItem="City" Placeholder="Select City" DataSource="Cities">
+                                                <SfDropDownList TValue="string" TItem="DistrictDto" Placeholder="Select district" DataSource="Districts">
                                                     <DropDownListFieldSettings Value="Id" Text="Name" />
-                                                    <DropDownListEvents TValue="string" TItem="City" ValueChange="OnCityValueChange" />
+                                                    <DropDownListEvents TValue="string" TItem="DistrictDto" ValueChange="OnDistrictValueChange" />
                                                 </SfDropDownList>
                                             </div>
                                             <div class="form-group mt-2">
@@ -180,11 +176,16 @@
                                                     var town = Country.Equals("") ? "Select town" : Town;
                                                 }
                                                 <label class="form-label">Select town</label>
-                                                <SfDropDownList TValue="string" TItem="Town" Placeholder="Select Town" DataSource="Towns">
+                                                <SfDropDownList TValue="string" TItem="WardDto" Placeholder="Select Town" DataSource="Wards">
                                                     <DropDownListFieldSettings Value="Id" Text="Name" />
-                                                    <DropDownListEvents TValue="string" TItem="Town" ValueChange="OnTownValueChange" />
+                                                    <DropDownListEvents TValue="string" TItem="WardDto" ValueChange="OnWardValueChange" />
                                                 </SfDropDownList>
                                                 <ValidationMessage For="()=>EmployeeGroup2.TownId" class="text-danger" />
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label class="form-label">Address</label>
+                                                <InputText @bind-Value="EmployeeGroup2.Address" class="form-control" />
+                                                <ValidationMessage For="() => EmployeeGroup2.Address" class="text-danger" />
                                             </div>
                                             <div class="form-group mt-3">
                                                 <label class="form-label">Other</label>
@@ -250,9 +251,9 @@
 
     [Parameter] public Employee Employee { get; set; } = new();
 
-    [Parameter] public List<Country> Countries { get; set; } = new();
-    [Parameter] public List<City> Cities { get; set; } = new();
-    [Parameter] public List<Town> Towns { get; set; } = new();
+    [Parameter] public List<ProvinceDto> Provinces { get; set; } = new();
+    [Parameter] public List<DistrictDto> Districts { get; set; } = new();
+    [Parameter] public List<WardDto> Wards { get; set; } = new();
 
     [Parameter] public List<GeneralDepartment> GeneralDepartments { get; set; } = new();
     [Parameter] public List<Department> Departments { get; set; } = new();
@@ -315,7 +316,6 @@
     {
         if (string.IsNullOrEmpty(EmployeeGroup1.Name)
         || string.IsNullOrEmpty(EmployeeGroup1.TelephoneNumber)
-        || string.IsNullOrEmpty(EmployeeGroup1.Address)
         || string.IsNullOrEmpty(EmployeeGroup1.CivilId)
         || string.IsNullOrEmpty(EmployeeGroup1.FileNumber))
             return false;
@@ -325,7 +325,7 @@
     //Form 2
     private bool ValidationEmployeeGroup2()
     {
-        if (string.IsNullOrEmpty(EmployeeGroup2.JobName) || EmployeeGroup2.TownId == 0 || EmployeeGroup2.BranchId == 0)
+        if (string.IsNullOrEmpty(EmployeeGroup2.JobName) || string.IsNullOrEmpty(EmployeeGroup2.TownId) || EmployeeGroup2.BranchId == 0 || string.IsNullOrEmpty(EmployeeGroup2.Address))
             return false;
         return true;
     }
@@ -340,7 +340,6 @@
         {
             Employee.Name = EmployeeGroup1.Name;
             Employee.TelephoneNumber = EmployeeGroup1.TelephoneNumber;
-            Employee.Address = EmployeeGroup1.Address;
             Employee.CivilId = EmployeeGroup1.CivilId;
             Employee.FileNumber = EmployeeGroup1.FileNumber;
             Employee.Photo = EmployeeGroup1.Photo;
@@ -388,13 +387,22 @@
         await NotifyParentFormCloseClicked.InvokeAsync();
     }
 
-    [Parameter] public EventCallback<int> HandleCountrySelectedEvent { get; set; }
-    private async Task OnCountryValueChange(ChangeEventArgs<string, Country> e) => await HandleCountrySelectedEvent.InvokeAsync(int.Parse(e.Value));
+    #region Location
+    [Parameter] public EventCallback<string> HandleProvinceSelectedEvent { get; set; }
+    private async Task OnProvinceValueChange(ChangeEventArgs<string, ProvinceDto> e)
+    {
+        ProvinceId = e.Value;
+        await HandleProvinceSelectedEvent.InvokeAsync(e.Value);
+    }
 
-    [Parameter] public EventCallback<int> HandleCitySelectedEvent { get; set; }
-    private async Task OnCityValueChange(ChangeEventArgs<string, City> e) => await HandleCitySelectedEvent.InvokeAsync(int.Parse(e.Value));
+    [Parameter] public EventCallback<(string provinceId, string districtId)> HandleDistrictSelectedEvent { get; set; }
+    public string? ProvinceId { get; set; } = string.Empty;
+    private async Task OnDistrictValueChange(ChangeEventArgs<string, DistrictDto> e) => await HandleDistrictSelectedEvent.InvokeAsync((ProvinceId!, e.Value));
 
-    private void OnTownValueChange(ChangeEventArgs<string, Town> e) => EmployeeGroup2.TownId = int.Parse(e.Value);
+    private void OnWardValueChange(ChangeEventArgs<string, WardDto> e) => EmployeeGroup2.TownId = e.Value;
+    #endregion
+    
+
 
 
     [Parameter] public EventCallback<int> HandleGeneralDepartmentSelectedEvent { get; set; }

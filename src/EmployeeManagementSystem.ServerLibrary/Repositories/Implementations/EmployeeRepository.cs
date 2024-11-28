@@ -29,23 +29,23 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
 
         public async Task<List<Employee>> GetAll()
         {
-            var result = await _context.Employees.AsNoTracking()
-                .Include(i => i.Town)
-                .ThenInclude(i => i.City)
-                .ThenInclude(i => i.Country)
-                .Include(i => i.Branch)
-                .ThenInclude(i => i.Department)
-                .ThenInclude(i => i.GeneralDepartment)
+            try
+            {
+                var result = await _context.Employees.AsNoTracking().Include(i => i.Branch).ThenInclude(i => i.Department).ThenInclude(i => i.GeneralDepartment)
                 .ToListAsync();
-            return result!;
+                return result!;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
         }
 
         public async Task<Employee> GetById(int id)
         {
             var result = await _context.Employees
-                .Include(i => i.Town)
-                .ThenInclude(i => i.City)
-                .ThenInclude(i => i.Country)
                 .Include(i => i.Branch)
                 .ThenInclude(i => i.Department)
                 .ThenInclude(i => i.GeneralDepartment)
@@ -92,9 +92,6 @@ namespace EmployeeManagementSystem.ServerLibrary.Repositories.Implementations
         public async Task<PagedList<Employee>> GetAllPaging(string? keyword, PagingParameters pagingParameters)
         {
             var query = _context.Employees
-                .Include(i => i.Town)
-                .ThenInclude(i => i.City)
-                .ThenInclude(i => i.Country)
                 .Include(e => e.Branch)
                 .ThenInclude(i => i.Department)
                 .ThenInclude(i => i.GeneralDepartment).AsQueryable();

@@ -13,28 +13,49 @@
                         <div class="card-header">
                             <button class="btn btn-outline-success" @onclick="ShowAddOrUpdateEmployeeButtonClicked"><i class="bi bi-plus-circle-dotted"></i>Add Employee</button>
                         </div>
-                        <div class="card-body">
-                            <SfGrid DataSource="@Employees">
-                                <GridColumns>
-                                    <GridColumn HeaderText="Employee Image">
-                                        <Template>
-                                            @{
-                                                var employee = (context as Employee);
-                                                <div class="image">
-                                                    <img src="@employee!.Photo" alt="@employee!.Name" width="150" height="150" />
-                                                </div>
-                                            }
-                                        </Template>
-                                    </GridColumn>
-                                    <GridColumn Field="@nameof(Employee.CivilId)" HeaderText="Civil Id" />
-                                    <GridColumn Field="@nameof(Employee.FileNumber)" HeaderText="File Number" />
-                                    <GridColumn Field="@nameof(Employee.Name)" HeaderText="Name" />
-                                    <GridColumn Field="@nameof(Employee.TelephoneNumber)" HeaderText="Telephone" />
-                                    <GridColumn Field="@nameof(Employee.JobName)" HeaderText="Job Name" />
-                                    <GridColumn Field="@nameof(Employee.Branch.Name)" HeaderText="Branch Name" />
-                                    <GridColumn Field="@nameof(Employee.Town.Name)" HeaderText="Town Name" />
-                                </GridColumns>
-                            </SfGrid>
+                        <div class="card-body" style="max-height: 580px; overflow-x:hidden;overflow-y:scroll;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Employee Image</th>
+                                        <th scope="col">Civil Id</th>
+                                        <th scope="col">File Number</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Telephone</th>
+                                        <th scope="col">Job Name</th>
+                                        <th scope="col">Branch Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Employees != null && Employees.Count > 0)
+                                    {
+                                        foreach (var item in Employees)
+                                        {
+                                            <tr>
+                                                <th scope="row">
+                                                    <div class="image">
+                                                        <img src="@item!.Photo" alt="@item!.Name" width="150" height="150" />
+                                                    </div>
+                                                </th>
+                                                <td>@item.CivilId</td>
+                                                <td>@item.FileNumber</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.TelephoneNumber</td>
+                                                <td>@item.JobName</td>
+                                                <td>@item.Branch!.Name</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="alert alert-info text-center">No Employees added yet!</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                         <div class="card-footer"></div>
                     </div>
@@ -44,21 +65,21 @@
     }
 }
 
-<AddOrUpdateEmployeePage @ref="addOrUpdateEmployeePage" 
-                        Employee="Employee"
-                        ShowAddOrUpdateEmployee="ShowAddOrUpdatePage" 
-                        NotifyParentFormCloseClicked="NotifyParentFormCloseClicked"
-                         Countries="DefaultCountries"
-                         Cities="SelectedCities"
-                         Towns="SelectedTowns"
+<AddOrUpdateEmployeePage @ref="addOrUpdateEmployeePage"
+                         Employee="Employee"
+                         ShowAddOrUpdateEmployee="ShowAddOrUpdatePage"
+                         NotifyParentFormCloseClicked="NotifyParentFormCloseClicked"
+                         Provinces="DefaultProvinces"
+                         Districts="SelectedDistricts"
+                         Wards="SelectedWards"
                          GeneralDepartments="DefaultGeneralDepartments"
                          Departments="SelectedDepartments"
-                         Branches="SelectedBranches" 
-                         HandleCountrySelectedEvent="HandleCountrySelectedEvent"
-                         HandleCitySelectedEvent="HandleCitySelectedEvent" 
+                         Branches="SelectedBranches"
                          HandleGeneralDepartmentSelectedEvent="HandleGeneralDepartmentSelectedEvent"
                          HandleDepartmentSelectedEvent="HandleDepartmentSelectedEvent"
-                         HandleSaveEmployeeClickedEvent="HandleSaveEmployeeClickedEvent" />
+                         HandleSaveEmployeeClickedEvent="HandleSaveEmployeeClickedEvent"
+                         HandleProvinceSelectedEvent="HandleProvinceSelectedEvent"
+                         HandleDistrictSelectedEvent="HandleDistrictSelectedEvent" />
 
 @code {
     AddOrUpdateEmployeePage? addOrUpdateEmployeePage;
@@ -66,22 +87,24 @@
     public Employee Employee { get; set; } = new();
 
     // Country / City / Town
-    public List<Country> DefaultCountries { get; set; } = new();
-    public List<City> DefaultCities { get; set; } = new();
-    public List<Town> DefaultTowns { get; set; } = new();
+    // public List<Country> DefaultCountries { get; set; } = new();
+    // public List<City> DefaultCities { get; set; } = new();
+    // public List<Town> DefaultTowns { get; set; } = new();
 
     public List<ProvinceDto> DefaultProvinces { get; set; } = new();
-    public List<DistrictDto> DefaultDistricts { get; set; } = new();
-    public List<WardDto> DefaultWards { get; set; } = new();
+    public List<DistrictDto> SelectedDistricts { get; set; } = new();
+    public List<WardDto> SelectedWards { get; set; } = new();
 
     public List<GeneralDepartment> DefaultGeneralDepartments { get; set; } = new();
     public List<Department> DefaultDepartments { get; set; } = new();
     public List<Branch> DefaultBranches { get; set; } = new();
 
     public List<Department> SelectedDepartments { get; set; } = [];
-    public List<City> SelectedCities { get; set; } = [];
+    //public List<City> SelectedCities { get; set; } = [];
     public List<Branch> SelectedBranches { get; set; } = [];
-    public List<Town> SelectedTowns { get; set; } = [];
+    //public List<Town> SelectedTowns { get; set; } = [];
+
+    public string ProvinceId { get; set; } = string.Empty;
 
     private async Task LoadEmployees()
     {
@@ -100,9 +123,9 @@
     {
         DefaultProvinces = await PlaceService.GetProvinceListAsync();
 
-        DefaultCountries = await CountryService.GetAll(Constants.CountryUrl);
-        DefaultCities = await CityService.GetAll(Constants.CityUrl);
-        DefaultTowns = await TownService.GetAll(Constants.TownUrl);
+        // DefaultCountries = await CountryService.GetAll(Constants.CountryUrl);
+        // DefaultCities = await CityService.GetAll(Constants.CityUrl);
+        // DefaultTowns = await TownService.GetAll(Constants.TownUrl);
 
         DefaultGeneralDepartments = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
         DefaultDepartments = await DepartmentService.GetAll(Constants.DepartmentUrl);
@@ -110,10 +133,10 @@
     }
 
     //Country select
-    private void HandleCountrySelectedEvent(int countryId) => SelectedCities = DefaultCities.Where(i => i.CountryId == countryId).ToList();
+    // private void HandleCountrySelectedEvent(int countryId) => SelectedCities = DefaultCities.Where(i => i.CountryId == countryId).ToList();
 
-    //City select
-    private void HandleCitySelectedEvent(int cityId) => SelectedTowns = DefaultTowns.Where(i => i.CityId == cityId).ToList();
+    // //City select
+    // private void HandleCitySelectedEvent(int cityId) => SelectedTowns = DefaultTowns.Where(i => i.CityId == cityId).ToList();
 
     //GeneralDepartment select
     private void HandleGeneralDepartmentSelectedEvent(int generalDepartmentId)
@@ -123,6 +146,19 @@
 
     //Department select
     private void HandleDepartmentSelectedEvent(int departmentId) => SelectedBranches = DefaultBranches.Where(i => i.DepartmentId == departmentId).ToList();
+
+    //Province select
+    private async Task HandleProvinceSelectedEvent(string provinceId)
+    {
+        ProvinceId = provinceId;
+        SelectedDistricts = await PlaceService.GetDistrictListByProvinceIdAsync(provinceId);
+    }
+
+    //District select
+    private async Task HandleDistrictSelectedEvent((string provinceId, string districtId) data)
+    {
+        SelectedWards = await PlaceService.GetWardListByDistrictIdAsync(data.provinceId, data.districtId);
+    }
 
     private async Task HandleSaveEmployeeClickedEvent(Employee employee)
     {
@@ -143,7 +179,7 @@
 
             addOrUpdateEmployeePage!.ClearContent();
         }
-        
+
         StateHasChanged();
     }
 

@@ -37,39 +37,6 @@
         #endregion
 
 
-        #region Country
-        public bool ShowCountry { get; set; }
-        public void CountryClicked()
-        {
-            ResetAllDepartments();
-            ShowCountry = true;
-            Action?.Invoke();
-        }
-        #endregion
-
-
-        #region City
-        public bool ShowCity { get; set; }
-        public void CityClicked()
-        {
-            ResetAllDepartments();
-            ShowCity = true;
-            Action?.Invoke();
-        }
-        #endregion
-
-
-        #region Town
-        public bool ShowTown { get; set; }
-        public void TownClicked()
-        {
-            ResetAllDepartments();
-            ShowTown = true;
-            Action?.Invoke();
-        }
-        #endregion
-
-
         #region User
         public bool ShowUser { get; set; }
         public void UserClicked()
@@ -96,9 +63,6 @@
             ShowGeneralDepartment = false;
             ShowDepartment = false;
             ShowBranch = false;
-            ShowCountry = false;
-            ShowCity = false;
-            ShowTown = false;
             ShowUser = false;
             ShowEmployee = false;
         }

@@ -1,4 +1,7 @@
-﻿@using EmployeeManagementSystem.ClientLibrary.Helpers
+﻿@using EmployeeManagementSystem.BaseLibrary.SeedWorks
+@using EmployeeManagementSystem.Client.Components
+@using EmployeeManagementSystem.ClientLibrary.Helpers
+@using EmployeeManagementSystem.ClientLibrary.Models
 @implements IDisposable
 @if (allState.ShowBranch)
 {
@@ -55,6 +58,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="card-footer">
+                        <Pagination MetaData="PageListBranch!.MetaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,6 +75,8 @@
     Branch Branch = new();
     public List<Branch> ListBranch { get; set; } = new();
     public List<Department> ListDepartment { get; set; } = new();
+    public PagedList<Branch> PageListBranch { get; set; } = new();
+    public GenericSearch Search { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +98,7 @@
     private async Task GetBranches()
     {
         ListBranch = await BranchService.GetAll(Constants.BranchUrl);
+        PageListBranch = await BranchService.GetAllPaging($"{Constants.BranchUrl}/paging", Search);
     }
 
     private async Task AddButtonClicked()
@@ -103,6 +112,12 @@
     {
         await GetDepartments();
         branchDialog?.OpenDialog();
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        Search.PageNumber = page;
+        await GetDepartments();
     }
 
     private async Task HandleSaveOperationEvent(Branch branch)
