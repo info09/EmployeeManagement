@@ -7,15 +7,19 @@ namespace EmployeeManagementSystem.ServerLibrary.Helper
 {
     public static class ReadFileJson
     {
-        public static async Task<List<ProvinceDto>> ReadFile(string path)
+        public static async Task<List<ProvinceDto>> ReadFileAsync(string path)
         {
-            var text = await File.ReadAllTextAsync(path);
-            var province = JsonConvert.DeserializeObject<List<Province>>(text);
-            var provinceDto = province!.Select(i => new ProvinceDto(i.Id, i.Name)).ToList();
-            return provinceDto;
+            using (var stream = new StreamReader(path))
+            using (var jsonReader = new JsonTextReader(stream))
+            {
+                var serializer = new JsonSerializer();
+                var provinces = serializer.Deserialize<List<Province>>(jsonReader);
+                var provinceDto = provinces?.Select(i => new ProvinceDto(i.Id, i.Name)).ToList();
+                return provinceDto ?? new List<ProvinceDto>();
+            }
         }
 
-        public static async Task<List<DistrictDto>> ReadFile(string path, string provinceId)
+        public static async Task<List<DistrictDto>> ReadFileAsync(string path, string provinceId)
         {
             var text = await File.ReadAllTextAsync(path);
             var provinces = JsonConvert.DeserializeObject<List<Province>>(text);
@@ -24,14 +28,14 @@ namespace EmployeeManagementSystem.ServerLibrary.Helper
             return districtDto;
         }
 
-        public static async Task<List<WardDto>> ReadFile(string path, string provinceId, string districtId)
+        public static async Task<List<WardDto>> ReadFileAsync(string filePath, string provinceId, string districtId)
         {
-            var text = await File.ReadAllTextAsync(path);
-            var provinces = JsonConvert.DeserializeObject<List<Province>>(text);
-            var province = provinces!.Where(i => i.Id == provinceId).FirstOrDefault();
-            var district = province!.Districts!.Where(i => i.Id == districtId).FirstOrDefault();
-            var wardDto = district!.Wards!.Select(i => new WardDto(i.Id, i.Name, i.Level)).ToList();
-            return wardDto;
+            var fileContent = await File.ReadAllTextAsync(filePath);
+            var provinces = JsonConvert.DeserializeObject<List<Province>>(fileContent);
+            var targetProvince = provinces?.FirstOrDefault(p => p.Id == provinceId);
+            var targetDistrict = targetProvince?.Districts?.FirstOrDefault(d => d.Id == districtId);
+            var wardDtos = targetDistrict?.Wards?.Select(w => new WardDto(w.Id, w.Name, w.Level))?.ToList();
+            return wardDtos ?? new List<WardDto>();
         }
     }
 }

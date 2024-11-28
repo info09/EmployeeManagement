@@ -1,5 +1,8 @@
 ﻿@using EmployeeManagementSystem.BaseLibrary.Dtos
+@using EmployeeManagementSystem.BaseLibrary.SeedWorks
+@using EmployeeManagementSystem.Client.Components
 @using EmployeeManagementSystem.ClientLibrary.Helpers
+@using EmployeeManagementSystem.ClientLibrary.Models
 @using Syncfusion.Blazor.Grids
 @implements IDisposable
 @if (allState.ShowEmployee)
@@ -57,7 +60,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer"></div>
+                        <div class="card-footer">
+                            <Pagination MetaData="PageListEmployee!.MetaData" Spread="3" SelectedPage="SelectedPage" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,6 +90,8 @@
     AddOrUpdateEmployeePage? addOrUpdateEmployeePage;
     public List<Employee> Employees { get; set; } = new();
     public Employee Employee { get; set; } = new();
+    public PagedList<Employee> PageListEmployee { get; set; } = new();
+    public GenericSearch Search { get; set; } = new();
 
     // Country / City / Town
     // public List<Country> DefaultCountries { get; set; } = new();
@@ -109,6 +116,7 @@
     private async Task LoadEmployees()
     {
         Employees = await EmployeeService.GetAll(Constants.EmployeeUrl);
+        PageListEmployee = await EmployeeService.GetAllPaging($"{Constants.EmployeeUrl}/paging", Search);
     }
 
     protected override async Task OnInitializedAsync()
@@ -123,20 +131,10 @@
     {
         DefaultProvinces = await PlaceService.GetProvinceListAsync();
 
-        // DefaultCountries = await CountryService.GetAll(Constants.CountryUrl);
-        // DefaultCities = await CityService.GetAll(Constants.CityUrl);
-        // DefaultTowns = await TownService.GetAll(Constants.TownUrl);
-
         DefaultGeneralDepartments = await GeneralDepartmentService.GetAll(Constants.GeneralDepartmentUrl);
         DefaultDepartments = await DepartmentService.GetAll(Constants.DepartmentUrl);
         DefaultBranches = await BranchService.GetAll(Constants.BranchUrl);
     }
-
-    //Country select
-    // private void HandleCountrySelectedEvent(int countryId) => SelectedCities = DefaultCities.Where(i => i.CountryId == countryId).ToList();
-
-    // //City select
-    // private void HandleCitySelectedEvent(int cityId) => SelectedTowns = DefaultTowns.Where(i => i.CityId == cityId).ToList();
 
     //GeneralDepartment select
     private void HandleGeneralDepartmentSelectedEvent(int generalDepartmentId)
@@ -181,6 +179,12 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        Search.PageNumber = page;
+        PageListEmployee = await EmployeeService.GetAllPaging($"{Constants.EmployeeUrl}/paging", Search);
     }
 
     private async Task<bool> DisplayMessage(bool flag, string message)

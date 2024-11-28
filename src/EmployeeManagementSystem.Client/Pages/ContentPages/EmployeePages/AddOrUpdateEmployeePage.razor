@@ -358,6 +358,7 @@
             Employee.Other = EmployeeGroup2.Other;
             Employee.BranchId = EmployeeGroup2.BranchId;
             Employee.TownId = EmployeeGroup2.TownId;
+            Employee.Address = EmployeeGroup2.Address;
             await HandleSaveEmployeeClickedEvent.InvokeAsync(Employee);
             EmployeeGroup1 = new();
             EmployeeGroup2 = new();
